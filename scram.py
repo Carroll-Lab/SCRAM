@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/python
 # encoding: utf-8
 '''
 
@@ -26,9 +26,9 @@ from argparse import RawDescriptionHelpFormatter
 from sets import Set
 
 __all__ = []
-__version__ = 0.1
-__date__ = '2016-01-12'
-__updated__ = '2016-01-12'
+__version__ = 0.2
+__date__ = '2016-02-23'
+__updated__ = '2016-02-23'
 
 DEBUG = 1
 TESTRUN = 0
@@ -66,8 +66,7 @@ def main(argv=None): # IGNORE:C0111
   Created by Stephen Fletcher on %s.
   Copyright 2016 Stephen Fletcher. All rights reserved.
 
-  Licensed under the Apache License 2.0
-  http://www.apache.org/licenses/LICENSE-2.0
+  Licensed under the MIT licence
 
   Distributed on an "AS IS" basis without warranties
   or conditions of any kind, either express or implied.
@@ -168,9 +167,6 @@ USAGE
         
         
         if f == 'NO_PLOT': 
-            """
-            TODO: this is causing issues
-            """
             fileFig=False
         else:
             fileFig=True        
@@ -247,7 +243,6 @@ USAGE
  
         
         elif ana =='avCDP':
-            fileFig=True
             if split is False:
                 analysis.avCDP_split(seq1, 
                                      seq2, 
@@ -277,7 +272,6 @@ USAGE
                                no_display,
                                pub)
         elif ana =='CDP':
-            fileFig=True
             if split is False:
                 analysis.CDP_split(seq1, 
                                    seq2, 
