@@ -47,7 +47,7 @@ class CLIError(Exception):
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
     ana_accepted=Set(['den','denAv', 'mnt3dm' , 'multiDen','avMultiDen',
-                      'avCDP','CDP' ,'sCDP'])
+                      'avCDP','CDP' ,'sCDP']) 
     if argv is None:
         argv = sys.argv
     else:
