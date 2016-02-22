@@ -23,6 +23,7 @@ import analysis
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
+from sets import Set
 
 __all__ = []
 __version__ = 0.1
@@ -45,7 +46,8 @@ class CLIError(Exception):
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
-
+    ana_accepted=Set(['den','denAv', 'mnt3dm' , 'multiDen','avMultiDen',
+                      'avCDP','CDP' ,'sCDP'])
     if argv is None:
         argv = sys.argv
     else:
@@ -83,7 +85,6 @@ USAGE
              alignment - single reference and sequence file, \
              multiDen (multi seq files and reference sequences), \
              avMultiDen (multi seq files in replicate and reference sequences),\
-            filter (Use lasrge reads to filter small read peaks, \
             avCDP (average Comparitive density plot, CDP \
             (comparitive density plot), \
             sCDP (single multi-seq alignment")
@@ -161,6 +162,11 @@ USAGE
         pub = args.publish
 
         #plot figure or not
+        if ana not in ana_accepted:
+            print "\nEXITING!\n\n{0} is not a recognized analysis type.\n"\
+                .format(ana)
+        
+        
         if f == 'NO_PLOT': 
             """
             TODO: this is causing issues
