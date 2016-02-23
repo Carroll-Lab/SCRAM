@@ -20,7 +20,7 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     fileFig = False, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = False, pub=False):
     """
-    FILL OUT
+    TODO:
     """
 
     ref = ref_dict.load_ref_file(ref_file)
@@ -57,7 +57,7 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     min_read_size = 18, max_read_size = 32, min_read_no=1, 
     onscreen = False, pub=False):
     """
-    FILL OUT
+    TODO:
     """
 
     ref = ref_dict.load_ref_file(ref_file)
@@ -79,7 +79,7 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
         smoothWinSize, window='blackman')
 
-    plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, fileFig, 
+    plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
         fileName, onscreen, x_label, pub)
 
 
@@ -88,7 +88,7 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = True, y_lim=0, pub=False):
     """
-    Aligne reads from a single seq file to a single reference for 21,22 and 24nt
+    Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
 
     ref = ref_dict.load_ref_file(ref_file)

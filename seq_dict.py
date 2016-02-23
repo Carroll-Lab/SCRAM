@@ -24,6 +24,7 @@ def load_av_seq_files(seq_file_1, seq_file_2,
 
     produce seq_dict --> sRNA:av_RPMR
     """
+    start = time.clock()
     seq_dict_1 = {}
     seq_dict_2 = {}
     read_count_1 = 0
@@ -70,6 +71,14 @@ def load_av_seq_files(seq_file_1, seq_file_2,
                                   ) + (seq_dict_2[sRNA] *
                                        (float(1000000) / read_count_2))) / 2
 
+    print "\nSequence file loading time = "\
+     + str((time.clock() - start)) + " seconds\n"
+    print "{0} has {1} loaded reads\n".format(seq_file_1.split('/')[-1],
+                                              read_count_1)
+    print "{0} has {1} loaded reads\n".format(seq_file_2.split('/')[-1],
+                                              read_count_2)
+    print "-"*50
+    
     return av_seq_dict
 
 

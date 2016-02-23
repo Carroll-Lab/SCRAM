@@ -46,7 +46,8 @@ def load_ref_file(ref_file):
 
     print '\n ---- {0} reference sequences \
 loaded for alignment ----'.format(ref_count)
-    print "\n{0} length = {1} bp".format(ref_file.split('/')[-1],
+    if len(ref_dict) ==1:
+        print "\n{0} length = {1} bp".format(ref_file.split('/')[-1],
                                          len(full_len_seq))
     print "\nReference sequence loading time = "\
      + str((time.clock() - start)) + " seconds\n"
