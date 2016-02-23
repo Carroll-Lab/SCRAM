@@ -13,7 +13,7 @@ import write_to_file
 import align
 import numpy
 import plot_reads
-
+import time
 
 
 def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50, 
@@ -30,6 +30,7 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     seq = seq_dict.load_seq_file(seq_file, 
         max_read_size, min_read_no, min_read_size)
     single_ref = ref[0][ref[1]]
+    start = time.clock()
     single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
 
     single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
@@ -41,6 +42,9 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
         smoothWinSize, window='blackman')
     y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
         smoothWinSize, window='blackman')
+    print "\n{0} nt lignment time time = {0} seconds\n"\
+        .format(nt, str((time.clock() - start)))
+    
     write_to_file.csv_output(single_alignment,nt,seq_file,
                              ref_file.split('/')[-1])
     if fileName == "auto":
@@ -57,7 +61,7 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     min_read_size = 18, max_read_size = 32, min_read_no=1, 
     onscreen = False, pub=False):
     """
-    TODO:
+    TODO: fix fig output
     """
 
     ref = ref_dict.load_ref_file(ref_file)
@@ -67,6 +71,7 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     seq = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
         max_read_size, min_read_no, min_read_size)
     single_ref = ref[0][ref[1]]
+    start = time.clock()
     single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
 
     single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
@@ -78,7 +83,8 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
         smoothWinSize, window='blackman')
     y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
         smoothWinSize, window='blackman')
-
+    print "\n{0} nt alignment time = {0} seconds\n"\
+        .format(nt, str((time.clock() - start)))
     plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
         fileName, onscreen, x_label, pub)
 

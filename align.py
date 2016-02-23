@@ -9,6 +9,7 @@ Align to seq/s to ref
 import operator
 import numpy
 
+
 def align_reads_to_seq(seq_dict, ref, sRNA_length):
     """
     Return mapped reads for a single ref_seq
