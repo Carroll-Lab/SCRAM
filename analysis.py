@@ -142,6 +142,57 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
     y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
     fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
 
+def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file, 
+    smoothWinSize=50, fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
+    max_read_size = 32, min_read_no=1, onscreen = True, y_lim=0, pub=False):
+    """
+    Align reads from a single seq file to a single reference for 21,22 and 24nt
+    """
+
+    ref = ref_dict.load_ref_file(ref_file)
+    if len(ref[0])>1:
+        print "\nMutliple reference sequences in file.  1st seq. used for \
+        alignment"
+    seq = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
+        max_read_size, min_read_no, min_read_size) 
+    single_ref = ref[0][ref[1]]
+    single_alignment_21 = align.align_reads_to_seq(seq, single_ref, 21)
+    single_alignment_22 = align.align_reads_to_seq(seq, single_ref, 22)        
+    single_alignment_24 = align.align_reads_to_seq(seq, single_ref, 24)
+
+    print '\n21nt sRNAs:'
+    single_sorted_alignemts_21 = align.aln_by_ref_pos(single_alignment_21)
+    print '\n22nt sRNAs:'
+    single_sorted_alignemts_22 = align.aln_by_ref_pos(single_alignment_22)
+    print '\n24nt sRNAs:'
+    single_sorted_alignemts_24 = align.aln_by_ref_pos(single_alignment_24)
+
+    graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
+        len(ref[0][ref[1]]),21)
+    graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
+        len(ref[0][ref[1]]),22)
+    graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
+        len(ref[0][ref[1]]),24)
+
+    x_ref = graph_processed_21[0]
+    x_label = ref[1][1:]
+    y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
+        smoothWinSize, window='blackman')
+    y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
+        smoothWinSize, window='blackman')
+    y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
+        smoothWinSize, window='blackman')
+    y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
+        smoothWinSize, window='blackman')
+    y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
+        smoothWinSize, window='blackman')
+    y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
+        smoothWinSize, window='blackman')
+
+
+    plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
+    y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
+    fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
 
 def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 

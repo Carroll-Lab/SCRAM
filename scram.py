@@ -46,8 +46,8 @@ class CLIError(Exception):
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
-    ana_accepted=Set(['den','denAv', 'mnt3dm' , 'multiDen','avMultiDen',
-                      'avCDP','CDP' ,'sCDP'])   
+    ana_accepted=Set(['den','denAv', 'mnt3dm' , 'mnt3dmAv','multiDen',
+                      'avMultiDen','CDP','avCDP' ,'sCDP'])   
     if argv is None:
         argv = sys.argv
     else:
@@ -82,10 +82,12 @@ USAGE
              reference and sequence file, denAv (single reference, \
              average of 2 seq files), mnt3dm (21, 22 and 24nt \
              alignment - single reference and sequence file, \
+             mnt3dmAv (21, 22 and 24 nt - single reference and  average of\
+             2 seq files, \
              multiDen (multi seq files and reference sequences), \
              avMultiDen (multi seq files in replicate and reference sequences),\
-            avCDP (average Comparitive density plot, CDP \
-            (comparitive density plot), \
+             CDP, avCDP (average Comparative density plot,  \
+            (comparative density plot), \
             sCDP (single multi-seq alignment")
         parser.add_argument('reference_file', 
                             type = str, help = "Reference file (.fasta format)")     
@@ -210,7 +212,19 @@ USAGE
                                                   no_display, 
                                                   ylim, 
                                                   pub)
-
+        elif ana == 'mnt3dmAv':
+            analysis.single_ref_coverage_21_22_24_av(seq1, 
+                                                     seq2,
+                                                     ref, 
+                                                     win, 
+                                                     fileFig, 
+                                                     f, 
+                                                     min_read, 
+                                                     max_read, 
+                                                     min_count, 
+                                                     no_display, 
+                                                     ylim, 
+                                                     pub)
         elif ana == 'multiDen':
             fileFig=True
             analysis.multi_seq_and_ref_21_22_24(seq_list, 
