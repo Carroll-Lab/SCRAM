@@ -61,6 +61,18 @@ class TestAlignSimple:
         assert align.align_reads_to_seq(seq_dict, 
                                         TestAlignSimple._ref, 
                                         21) != align_dict
+    def test_align_5(self):
+        """
+        Simple align - sRNA not present - boundary
+        """
+        seq_dict={}
+        align_dict={}
+        
+        seq_dict["TTTTTTTTTTTTTTTTTTTTT"] = 10
+        align_dict["TTTTTTTTTTTTTTTTTTTTT"]=[[0,10]]
+        assert align.align_reads_to_seq(seq_dict, 
+                                        TestAlignSimple._ref, 
+                                        21) != align_dict
                                         
     def test_align_double_1(self):
         """
