@@ -659,5 +659,3 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     write_to_file.cdp_single_output(counts_by_ref, 
                                     seq_file_1.split("/")[-1].split(".")[-2], 
                                     nt)
-
- 
