@@ -95,5 +95,8 @@ class TestAlignSimple:
         seq_dict={}
         align_dict={}
         seq_dict["CCCCCCCCCCCCCCCCCCCCC"] = 10
-        align_dict["CCCCCCCCCCCCCCCCCCCCC"]=[[21,10],[22,10]]   
+        align_dict["CCCCCCCCCCCCCCCCCCCCC"]=[[42,-10],[41,-10]]
+        assert align.align_reads_to_seq(seq_dict, 
+                            TestAlignSimple._ref, 
+                            21) == align_dict    
         

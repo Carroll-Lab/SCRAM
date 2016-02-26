@@ -10,6 +10,7 @@ import ref_dict
 import seq_dict
 import post_process
 import write_to_file
+import cdp
 import align
 import numpy
 import plot_reads
@@ -391,6 +392,10 @@ def CDP(seq_file_1, seq_file_2, ref_file, nt,
     fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False,
     pub=False):
+    """
+    Plots aligmnent count for each sRNA in ref file as (x,y)
+    for 2 seq files.  No splitting of read count
+    """  
 
     refs = ref_dict.load_ref_file(ref_file)
     seq_1 = seq_dict.load_seq_file(seq_file_1, 
@@ -400,9 +405,6 @@ def CDP(seq_file_1, seq_file_2, ref_file, nt,
 
     counts_by_ref = {} #header:(count1, count2)
     
-    """
-    TODO: fix plotting
-    """
     for header, single_ref in refs[0].iteritems():
         #ref_seq_count +=1
         single_alignment_1 = align.count_align_reads_to_seq(seq_1, 
@@ -434,6 +436,15 @@ def CDP_split(seq_file_1, seq_file_2, ref_file, nt,
     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False,
     pub=False):
 
+    """
+    Plots aligmnent count for each sRNA in ref file as (x,y)
+    for 2 seq files.  Read count split by number of times an sRNA aligns
+    
+    TODO: combine with avCDP and make a new function for the repeated stuff
+    
+    """  
+
+
     refs = ref_dict.load_ref_file(ref_file)
     seq_1 = seq_dict.load_seq_file(seq_file_1, 
         max_read_size, min_read_no, min_read_size)
@@ -442,21 +453,32 @@ def CDP_split(seq_file_1, seq_file_2, ref_file, nt,
 
     alignment_dict_1={} #header:aligned_sRNAs
     alignment_dict_2={}
-
-
+    
     #calc aligned sRNAs for each header, duplicate if necessary
     for header, single_ref in refs[0].iteritems():
 
         alignment_dict_1[header] = \
-        align.count_align_reads_to_seq_split(seq_1, single_ref, nt)
+        cdp.dict_align_reads_to_seq_split(seq_1, single_ref, nt)
         alignment_dict_2[header] = \
-        align.count_align_reads_to_seq_split(seq_2, single_ref, nt)        
+        cdp.dict_align_reads_to_seq_split(seq_2, single_ref, nt)        
     
-    counts_by_ref = CDP_split_helper(seq_1, seq_2, refs, 
-                                     alignment_dict_1, alignment_dict_2)   
+    times_align_1=cdp.times_read_aligns(alignment_dict_1)
+    times_align_2=cdp.times_read_aligns(alignment_dict_2)
+    
+    header_split_count_1=cdp.split_reads_for_header(alignment_dict_1, 
+                                                    times_align_1, 
+                                                    seq_1)
+    header_split_count_2=cdp.split_reads_for_header(alignment_dict_2, 
+                                                    times_align_2, 
+                                                    seq_2)  
+    
+    
+    counts_by_ref = cdp.header_x_y_counts(header_split_count_1, 
+                                          header_split_count_2, 
+                                          refs)  
 
-    seq1 = seq_file_1.split('/')[-1][:-5]
-    seq2 = seq_file_2.split('/')[-1][:-5]
+    seq1 = seq_file_1.split('/')[-1].split('.')[0] #x_axis name
+    seq2 = seq_file_2.split('/')[-1].split('.')[0] #y axis name
     if onscreen ==True:
         plot_reads.cdp_plot(counts_by_ref, 
                             seq1, 
@@ -491,8 +513,12 @@ def avCDP(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
                                                             single_ref, nt)        
         if single_alignment_1 != 0 or single_alignment_2 !=0:
             counts_by_ref[header] = (single_alignment_1, single_alignment_2)
-    seq1 = seq_file_1.split('/')[-1][:-5]
-    seq2 = seq_file_3.split('/')[-1][:-5]
+    seq1 = "{0} + {1}".format(seq_file_1.split('/')[-1].split('.')[0],
+                            seq_file_2.split('/')[-1].split('.')[0])
+
+    #y_axis name
+    seq2 = "{0} + {1}".format(seq_file_3.split('/')[-1].split('.')[0],
+                            seq_file_4.split('/')[-1].split('.')[0])
 
     if onscreen ==True:
         plot_reads.cdp_plot(counts_by_ref, 
@@ -504,37 +530,59 @@ def avCDP(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
                             fileName,
                             pub)    
     write_to_file.cdp_output(counts_by_ref, 
-                             seq_file_1.split("/")[-1].split(".")[-2], 
-                             seq_file_3.split("/")[-1].split(".")[-2],nt)    
+                             "{0}_{1}".format(seq_file_1.split('/')[-1]\
+                                              .split('.')[0],
+                            seq_file_2.split('/')[-1].split('.')[0]), 
+                             "{0}_{1}".format(seq_file_3.split('/')[-1]\
+                                              .split('.')[0],
+                            seq_file_4.split('/')[-1].split('.')[0]),
+                             nt)    
 
 
 def avCDP_split(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt, 
     fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False, 
     pub=False):
-
+ 
     refs = ref_dict.load_ref_file(ref_file)
     seq_1 = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
         max_read_size, min_read_no, min_read_size)
     seq_2 = seq_dict.load_av_seq_files(seq_file_3, seq_file_4, 
         max_read_size, min_read_no, min_read_size)    
-
+ 
     alignment_dict_1={} #header:aligned_sRNAs
     alignment_dict_2={}
-
+    
     #calc aligned sRNAs for each header, duplicate if necessary
     for header, single_ref in refs[0].iteritems():
- 
+
         alignment_dict_1[header] = \
-        align.count_align_reads_to_seq_split(seq_1, single_ref, nt)
+        cdp.dict_align_reads_to_seq_split(seq_1, single_ref, nt)
         alignment_dict_2[header] = \
-        align.count_align_reads_to_seq_split(seq_2, single_ref, nt)        
+        cdp.dict_align_reads_to_seq_split(seq_2, single_ref, nt)        
+    
+    times_align_1=cdp.times_read_aligns(alignment_dict_1)
+    times_align_2=cdp.times_read_aligns(alignment_dict_2)
+    
+    header_split_count_1=cdp.split_reads_for_header(alignment_dict_1, 
+                                                    times_align_1, 
+                                                    seq_1)
+    header_split_count_2=cdp.split_reads_for_header(alignment_dict_2, 
+                                                    times_align_2, 
+                                                    seq_2)  
+    
+    
+    counts_by_ref = cdp.header_x_y_counts(header_split_count_1, 
+                                          header_split_count_2, 
+                                          refs)  
 
-    counts_by_ref = CDP_split_helper(seq_1, seq_2, refs, 
-                                     alignment_dict_1, alignment_dict_2)
+    #x_axis name
+    seq1 = "{0} + {1}".format(seq_file_1.split('/')[-1].split('.')[0],
+                            seq_file_2.split('/')[-1].split('.')[0])
 
-    seq1 = seq_file_1.split('/')[-1][:-5]
-    seq2 = seq_file_3.split('/')[-1][:-5]
+    #y_axis name
+    seq2 = "{0} + {1}".format(seq_file_3.split('/')[-1].split('.')[0],
+                            seq_file_4.split('/')[-1].split('.')[0])
     if onscreen ==True:
         plot_reads.cdp_plot(counts_by_ref, 
                             seq1, 
@@ -545,9 +593,13 @@ def avCDP_split(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
                             fileName,
                             pub)
     write_to_file.cdp_output(counts_by_ref, 
-                             seq_file_1.split("/")[-1].split(".")[-2], 
-                             seq_file_3.split("/")[-1].split(".")[-2],
-                             nt)
+                             "{0}_{1}".format(seq_file_1.split('/')[-1]\
+                                              .split('.')[0],
+                            seq_file_2.split('/')[-1].split('.')[0]), 
+                             "{0}_{1}".format(seq_file_3.split('/')[-1]\
+                                              .split('.')[0],
+                            seq_file_4.split('/')[-1].split('.')[0]),
+                             nt)  
 
 
 def CDP_single_split(seq_file_1, ref_file, nt, 
@@ -555,6 +607,9 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     """
     Normalised split alignments for a single reference - all recorded
     including 0
+    
+    
+    TODO: may be incorrect - check with unit tests!!!!!!
     """
 
     refs = ref_dict.load_ref_file(ref_file)
@@ -577,7 +632,7 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     for header, single_ref in refs[0].iteritems():
 
         alignment_dict_1[header] = \
-        align.count_align_reads_to_seq_split(seq_1, single_ref, nt)
+        align.list_align_reads_to_seq_split(seq_1, single_ref, nt)
         
     
     #calc no of times each sRNA is aligned - 1    
@@ -605,50 +660,4 @@ def CDP_single_split(seq_file_1, ref_file, nt,
                                     seq_file_1.split("/")[-1].split(".")[-2], 
                                     nt)
 
-def CDP_split_helper(seq_1, seq_2, refs, alignment_dict_1, alignment_dict_2):
-    """
-    Helper function splits read counts evenly between alignments
-    """
-    
-    #calc no of times each sRNA is aligned - 1    
-    sRNA_align_count_1={} #sRNA:no_of_times_aligned
-    sRNA_align_count_2={}
-    header_split_count_1={} #header:count
-    header_split_count_2={}
-    counts_by_ref = {}
-    
-    for header, sRNA_list in alignment_dict_1.iteritems():
-        for sRNA in sRNA_list:
-            if sRNA in sRNA_align_count_1:
-                sRNA_align_count_1[sRNA] +=1
-            else:
-                sRNA_align_count_1[sRNA] = 1
-    #calc no of times each sRNA is aligned - 2
-    for header, sRNA_list in alignment_dict_2.iteritems():
-        for sRNA in sRNA_list:
-            if sRNA in sRNA_align_count_2:
-                sRNA_align_count_2[sRNA] +=1
-            else:
-                sRNA_align_count_2[sRNA] = 1
-    #calc split alignment count for each header - 1
-    for header, sRNA_list in alignment_dict_1.iteritems():
-        header_split_count_1[header] = 0
-        for sRNA in sRNA_list:
-            header_split_count_1[header] +=seq_1[sRNA]/sRNA_align_count_1[sRNA]
-    #calc split alignment count for each header - 1
-    for header, sRNA_list in alignment_dict_2.iteritems():
-        header_split_count_2[header] = 0
-        for sRNA in sRNA_list:
-            header_split_count_2[header] +=seq_2[sRNA]/sRNA_align_count_2[sRNA]
-    #construct x,y counts for each header
-    for header in refs[0]:
-        if header in header_split_count_1 and header in header_split_count_2:
-            counts_by_ref[header] = (header_split_count_1[header], 
-                                     header_split_count_2[header])
-        elif header in header_split_count_1 and header \
-        not in header_split_count_2:
-            counts_by_ref[header] = (header_split_count_1[header], 0)
-        elif header not in header_split_count_1 and header in \
-        header_split_count_2:
-            counts_by_ref[header] = (0, header_split_count_2[header])
-    return counts_by_ref  
+ 

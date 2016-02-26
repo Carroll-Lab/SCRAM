@@ -258,7 +258,7 @@ USAGE
         
         elif ana =='avCDP':
             if split is False:
-                analysis.avCDP_split(seq1, 
+                analysis.avCDP_split(seq1,  
                                      seq2, 
                                      seq3, 
                                      seq4, 
