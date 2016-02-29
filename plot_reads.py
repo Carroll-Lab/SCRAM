@@ -12,6 +12,7 @@ def den_plot(x_ref,
         y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
         fileName, onscreen, x_label, pub = False):
     """
+    TODO: add y_lim adjustment
     Single sRNA length den map plot:
     x-axis - reference
     y-axis - RPMR
