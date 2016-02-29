@@ -26,10 +26,15 @@
         or more reference sequences and producing publiciation-quality images. </p>
 
     <h3>Installation</h3>
-        <p>Unpack to a location of you choice. If your Python 2.7 path differs
-        from <code>/usr/bin/python</code> - modify line 1 of scram.py to reflect
+        <p>Unpack to a location of you choice. Use directly :<br>
+        <code>python scram.py req1 req 2 [opt]</code><br>Or install in your path : <br>
+        If your Python 2.7 path differs from <code>/usr/bin/python</code> 
+        <ol>
+        <li>If your Python 2.7 path differs from <code>/usr/bin/python</code>  - modify line 1 of scram.py to reflect
          the path.
-        <br><br>
+         <li>line
+         <li>
+         </ol><br>
         Required Python packages:<br>
         <code>matplotlib</code>
         <br>
@@ -37,7 +42,7 @@
         </p>  
     <h3>Usage</h3>
         <p>    
-        <code>python scram.py analysis_type reference_file [-h] [-s1 SEQ_FILE_1] [-s2 SEQ_FILE_2] [-s3 SEQ_FILE_3]
+        <code>scram.py analysis_type reference_file [-h] [-s1 SEQ_FILE_1] [-s2 SEQ_FILE_2] [-s3 SEQ_FILE_3]
                 [-s4 SEQ_FILE_4] [-nt SRNA_LEN] [-f FILE_NAME]
                 [-seq_list SEQ_LIST] [-min_read MIN_READ_SIZE]
                 [-max_read MAX_READ_SIZE] [-min_count MIN_READ_COUNT]
