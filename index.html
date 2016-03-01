@@ -85,18 +85,51 @@
         (<code>-s1</code>, <code>-s2</code> and <code>-nt</code> required)</li>
         <li><code>mnt3dm</code> : align 21, 22 and 24 nt reads from a single sequence file to a single reference sequence
         (<code>-s1</code> required)</li>
-        <li><code>mnt3dm</code> : align 21, 22 and 24 nt reads from a single sequence file to a single reference sequence
-        (<code>-s1</code> required)</li>
         <li><code>multiDen</code> : align reads of a single class (eg. 21 nt) from a multiple sequence files to multiple reference sequences
         (<code>-seq_list</code> required)</li>
         <li><code>multiDen</code> : align reads of a single class (eg. 21 nt) from a multiple replicate sequence files to multiple reference sequences
         (<code>-seq_list</code> required)</li>
         <li><code>CDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Counts for two sequence files are plotted as (x,y) coordinates for each reference
         (<code>-s1</code>, <code>-s2</code> and <code>-nt</code> required)</li>
-        <li><code>CDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Counts for two replicate sequence files are plotted as (x,y) coordinates for each reference
+        <li><code>avCDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Counts for two replicate sequence files are plotted as (x,y) coordinates for each reference
         (<code>-s1</code>, <code>-s2</code>, <code>-s3</code>, <code>-s4</code>and <code>-nt</code> required)</li>
         <li><code>sCDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Single sequence file required. CSV output only.
         (<code>-s1</code> and <code>-nt</code> required)</li>             
+        </ul>
+        Flags<br>
+        <ul>
+          <li>-h, --help : Help message
+          <li>-s1 : Sequence file 1</li>
+                                
+          <li>-s2 : Sequence file 2</li>
+        
+          <li>-s3 : Sequence file 3</li>
+                                
+          <li>-s4 : Sequence file 4</li>
+                                
+          <li>-nt : sRNA length to analyse</li>
+          <li>-f : Figure output file name (if not auto-generated)</li>
+                                
+          <li>-seq_list : Text (.txt) file with full path of sequence file on each line (single replicate) or two tab-delimited sequence file paths per line (two replicates)</li>
+                                S
+          <li>-min_read : Minimum length of sRNA reads used for normalisation (default=18) </li>
+                                
+          <li>-max_read : Maximum length of sRNA reads used for normalisation (default=32)</li>
+                                
+          <li>-min_count : Minimum read count for an sRNA to be aligned and used for normalisation
+                                (default=1)</li>
+
+          <li>-win :  Window size for smoothing of den plots (default=50)</li>
+
+          <li>-ylim : +/- y-axis limit on plots</li>
+                                
+          <li>-no_display : Do not display plot on screen</li>
+                                
+          <li>-split : Split CDP read alignment counts based on no. of
+                                alignments</li>
+                                
+          <li>-pub : Remove all labels from density maps for publication</li>
+          <li>-V : Show program's version number and exit</li>
         </ul>
         </p>
       <footer class="site-footer">
