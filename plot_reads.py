@@ -86,7 +86,7 @@ def den_multi_plot_3(x_ref,
         xlabel(x_label)
         ylabel('Reads per million reads')
         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
-           ncol=3, mode="expand", borderaxespad=0.)
+           ncol=3, mode="expand", borderaxespad=0., fontsize=20)
         plt.rc('font',family='Arial')
 #         plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3,
 #            ncol=3, mode="expand", borderaxespad=0., fontsize=20)    
