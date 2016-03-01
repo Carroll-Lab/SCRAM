@@ -45,7 +45,7 @@
         <br>
         <code>numpy</code><br>
         </p>  
-    <h3>File Format</h3>
+    <h3>Input File Format</h3>
     <p>
     Reference File : DNA nucleotides only (AGCT) - FASTA format
     <br><br>
@@ -133,6 +133,13 @@
           <li><code>-V</code> : Show program's version number and exit</li>
         </ul>
         </p>
+    <h3>Examples</h3>
+        <code> scram den ./ref.fa -s1 seq1.fa -nt 24 -win 30 -f fig1.pdf</code><br><br>
+        
+        <code> scram mnt3dm ./ref.fa -s1 seq1.fa -win 20 -ylim 110 -f fig2.pdf</code><br><br>
+        
+        <code> scram CDP ./cDNAs.fa -s1 seq1.fa -s2 seq2.fa -nt 21 -split</code><br><br>
+        
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/Carroll-Lab/scram">Scram</a> is maintained by <a href="https://github.com/Carroll-Lab">Carroll-Lab</a>.</span>
 
