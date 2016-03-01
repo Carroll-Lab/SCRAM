@@ -23,14 +23,14 @@
     <a id="scram" class="anchor" href="#scram" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SCRAM</h1>
         <img src="images/website-image.png" alt="plots" class="inline">
         <p>SCRAM is lightweight Python package for aligning small RNA reads to one
-        or more reference sequences and producing publiciation-quality images. <br><br>
+        or more reference sequences and producing publication-quality images. <br><br>
             
             Developed by Stephen Fletcher @ the laboratory of <a href="http://staff.scmb.uq.edu.au/staff/bernard-carroll">Prof. Bernie Carroll</a>, University of Queensland
         </p><br>
 
     <h3>Installation</h3>
         <p>Unpack to a location of your choice. Use directly :<br>
-        <br><code>python scram analysis reference [opt]</code><br>
+        <br><code>python path/to/scram analysis reference [opt]</code><br>
             
         <br>Or install in your path : <br>
         <ol>
@@ -52,7 +52,8 @@
     Sequence File : Collapsed reads - DNA nucleotides only (AGCT) - FASTA format
     <br><br>
     Post-processing of FASTQ reads to collapsed FASTA format can be carried out using the 
-    <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FASTX-Toolkit from the Hannon Lab</a>.
+    <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FASTX-Toolkit from the Hannon Lab</a>.  
+    Collapsed reads are unique, and contain the read count in the header.  
     <br><br>
     An example of the required sequence file format:<br>
     <code>
@@ -69,7 +70,7 @@
     
     <h3>Usage</h3>
         <p>    
-        <code>scram.py analysis_type reference_file [-h] [-s1 SEQ_FILE_1] [-s2 SEQ_FILE_2] [-s3 SEQ_FILE_3]
+        <code>scram analysis_type reference_file [-h] [-s1 SEQ_FILE_1] [-s2 SEQ_FILE_2] [-s3 SEQ_FILE_3]
                 [-s4 SEQ_FILE_4] [-nt SRNA_LEN] [-f FILE_NAME]
                 [-seq_list SEQ_LIST] [-min_read MIN_READ_SIZE]
                 [-max_read MAX_READ_SIZE] [-min_count MIN_READ_COUNT]
