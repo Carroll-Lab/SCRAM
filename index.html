@@ -40,11 +40,33 @@
          </ol>
              
          <code>scram.py req1 req 2 [opt]</code><br><br>
-        Required Python packages:<br>
+        Required Python packages:<br><br>
         <code>matplotlib</code>
         <br>
         <code>numpy</code>
         </p>  
+    <h3>File Format</h3>
+    <p>
+    Reference File - DNA sequences only (AGCT) - FASTA format
+    <br>
+    Sequence File - Collapsed reads - DNA sequences only (AGCT) - FASTA format
+    <br>
+    Post-processing of FASTQ reads to collapsed FASTA foramt can be carried out using the 
+    <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FASTX-Toolkit from the Hannon Lab</a>.
+    <br>
+    An example of the required format:
+    <code>
+    head seq1.fa<br>
+    >1-607041
+    TCGGACCAGGCATCATTCCCC
+    >2-202886
+    TCGGACCAGGCTTCATACCCC
+    >3-71446
+    TCCCAAATATAGACAAAGCA
+    </code>
+
+      
+    
     <h3>Usage</h3>
         <p>    
         <code>scram.py analysis_type reference_file [-h] [-s1 SEQ_FILE_1] [-s2 SEQ_FILE_2] [-s3 SEQ_FILE_3]
