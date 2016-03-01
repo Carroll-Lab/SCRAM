@@ -53,7 +53,7 @@
     <br><br>
     Post-processing of FASTQ reads to collapsed FASTA format can be carried out using the 
     <a href="http://hannonlab.cshl.edu/fastx_toolkit/">FASTX-Toolkit from the Hannon Lab</a>.  
-    Collapsed reads are unique, and contain the read count in the header.  
+     Collapsed reads are unique, and contain the read count in the header.  
     <br><br>
     An example of the required sequence file format:<br>
     <code>
@@ -80,21 +80,21 @@
         <br><br>
         Analysis types<br>
         <ul>
-        <li><code>den</code> : align reads of a single class (eg. 21 nt) from a single sequence file to a single reference sequence
+        <li><code>den</code> : align reads of a single sRNA class (eg. 21 nt) from a single sequence file to a single reference sequence
         (<code>-s1</code> and <code>-nt</code> required)</li>
-        <li><code>denAv</code> : align reads of a single class (eg. 21 nt) to a single reference. Reads are the average from 2 replicate sequence files
+        <li><code>denAv</code> : align reads of a single sRNA class (eg. 21 nt) to a single reference. Reads are the average from 2 replicate sequence files
         (<code>-s1</code>, <code>-s2</code> and <code>-nt</code> required)</li>
         <li><code>mnt3dm</code> : align 21, 22 and 24 nt reads from a single sequence file to a single reference sequence
         (<code>-s1</code> required)</li>
-        <li><code>multiDen</code> : align reads of a single class (eg. 21 nt) from a multiple sequence files to multiple reference sequences
+        <li><code>multiDen</code> : align reads of a single sRNA class (eg. 21 nt) from a multiple sequence files to multiple reference sequences
         (<code>-seq_list</code> required)</li>
-        <li><code>multiDen</code> : align reads of a single class (eg. 21 nt) from a multiple replicate sequence files to multiple reference sequences
+        <li><code>multiDen</code> : align reads of a single sRNA class (eg. 21 nt) from a multiple replicate sequence files to multiple reference sequences
         (<code>-seq_list</code> required)</li>
-        <li><code>CDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Counts for two sequence files are plotted as (x,y) coordinates for each reference
+        <li><code>CDP</code> : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Counts for two sequence files are plotted as (x,y) coordinates for each reference
         (<code>-s1</code>, <code>-s2</code> and <code>-nt</code> required)</li>
-        <li><code>avCDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Counts for two replicate sequence files are plotted as (x,y) coordinates for each reference
+        <li><code>avCDP</code> : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Counts for two replicate sequence files are plotted as (x,y) coordinates for each reference
         (<code>-s1</code>, <code>-s2</code>, <code>-s3</code>, <code>-s4</code>and <code>-nt</code> required)</li>
-        <li><code>sCDP</code> : count aligned reads of a single class (eg. 21 nt) to multiple reference sequences. Single sequence file required. CSV output only.
+        <li><code>sCDP</code> : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Single sequence file required. CSV output only.
         (<code>-s1</code> and <code>-nt</code> required)</li>             
         </ul>
         Flags<br>
