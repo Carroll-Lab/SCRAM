@@ -48,12 +48,13 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     
     write_to_file.csv_output(single_alignment,nt,seq_file,
                              ref_file.split('/')[-1])
-    if fileName == "auto":
-        seq_name = seq_file.split('/')[-1].split('.')[0]
-        fileName = "{0}_{1}nt.pdf".format(seq_name, str(nt))
-
-    plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-        fileName, onscreen, x_label, pub)
+    if onscreen:
+        if fileName == "auto":
+            seq_name = seq_file.split('/')[-1].split('.')[0]
+            fileName = "{0}_{1}nt.pdf".format(seq_name, str(nt))
+            
+        plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
+            fileName, onscreen, x_label, pub)
 
 
 
@@ -292,9 +293,6 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
     for i in aln_counts:
         print i[0], i[1], i[2], i[5], i[8]
 
-    if circos:
-
-        write_to_file.circos_output(circos_results)
 
 
 def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
@@ -376,17 +374,6 @@ def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
                     fileName, onscreen, 
                     x_label, y_lim, pub)
 
-            if circos:
-                circos_results.append((single_seq.split('/')[-1], header[1:], 
-                    y_fwd_smoothed_21, y_rvs_smoothed_21, y_fwd_smoothed_22, 
-                    y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24))
-
-    if circos:
-        # format --> (seq_file_name, header (chr), 21+, 21-, 22+, 22-, 24+, 24-)
-
-        write_to_file.circos_output(circos_results)
-    for i in aln_counts:
-        print i[0], i[1][0], i[1][1], i[2], i[3], i[4]
 
 def CDP(seq_file_1, seq_file_2, ref_file, nt, 
     fileFig=False, fileName = 'plot.pdf', 
