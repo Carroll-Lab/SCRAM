@@ -20,7 +20,7 @@ def csv_output(alignment_dict, nt, seq_file, header):
         for i in alignment:
             alignment_list.append((sRNA,i[0],i[1]))
     alignment_list.sort(key=lambda tup : tup[1])
-    with open(header.split('.')[0]+'_'+seq_file_name+'_'+str(nt)\
+    with open(header+'_'+seq_file_name+'_'+str(nt)\
               +'.csv', 'wb') as csvfile:
         mycsv = csv.writer(csvfile, delimiter=',')
         mycsv.writerow(['sRNA','Position', 'Count'])
