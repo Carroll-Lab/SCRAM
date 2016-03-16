@@ -12,7 +12,7 @@ import csv
 def csv_output(alignment_dict, nt, seq_file, header):
     """
     Write to file --> csv
-    sRNA,pos,count
+    sRNA,pos,count 
     """
     alignment_list=[]
     seq_file_name = seq_file.split('/')[-1].split('.')[0]
