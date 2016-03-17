@@ -11,9 +11,9 @@ import numpy
 
 def fill_in_zeros(fwd_rvs_align_list, ref_len, nt):
     """
-    Takes sorted alignment lists (fwd and rvs) as an imput
+    Takes sorted alignment lists (fwd and rvs) as an input
     Produces 3 lists:
-        reference_x_axis (every nucleotid index in the ref_seq)
+        reference_x_axis (every nucleotide index in the ref_seq)
         fwd_alignment_y_axis (+ve y values for each ref_seq index)
         rvs_alignment_y_axis (-ve y values for each ref_seq index)
 
