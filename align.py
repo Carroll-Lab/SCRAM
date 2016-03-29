@@ -142,39 +142,3 @@ def complement(seq):
 
 
 
-# def detect_phase(fwd_sorted_alignment, 
-#                  rvs_sorted_alignment, phase_len = 22, cycle_no=10):
-#     phased_align_dict = {}
-#     max_product_len = fwd_sorted_alignment[-1][0]
-#     phased_alignments = []
-#     
-#     for i in range(max_product_len):
-#         phased_alignments.append(0)
-#     
-#     for i in fwd_sorted_alignment:
-#         phased_align_dict[i[0]] = i[1]
-#     
-#     for i in rvs_sorted_alignment:
-#         if i[0]+3-phase_len in phased_align_dict:
-# 
-#             phased_align_dict[i[0]+3-phase_len] += abs(i[1])
-# 
-#         else:
-#             phased_align_dict[i[0]+3-phase_len] = abs(i[1])
-#     
-#     print phased_align_dict
-# 
-#     pos = 0
-#     while pos < max_product_len:
-#         counts = []
-#         for i in range(pos, pos+(cycle_no*phase_len), phase_len):
-#             try:
-#                 counts.append(phased_align_dict[i])
-#             except:
-#                 counts.append(0)
-#         if len(counts)!=0:
-#             phased_alignments[pos] = numpy.median(counts)
-#         pos+=1
-#         print pos, counts, numpy.median(counts)
-
-

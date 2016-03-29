@@ -48,7 +48,7 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
         smoothWinSize, window='blackman')
     y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
         smoothWinSize, window='blackman')
-    print "\n{0} nt lignment time time = {0} seconds\n"\
+    print "\n{0} nt alignment time time = {1} seconds\n"\
         .format(nt, str((time.clock() - start)))
     
 
@@ -210,7 +210,6 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
     pairwise alignments for all seqs and refs will take place
     """
     aln_counts = [] 
-    circos_results = []
     ref_seq_count = 0
     # Load all refs --> need to be in a single file I think
     refs = ref_dict.load_ref_file(ref_file)
@@ -287,15 +286,7 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
                     y_rvs_smoothed_21, y_fwd_smoothed_22, y_rvs_smoothed_22, 
                     y_fwd_smoothed_24, y_rvs_smoothed_24, fileFig, fileName, 
                     onscreen, 
-                    x_label, y_lim, pub) 
-
-            if circos:
-                circos_results.append((single_seq.split('/')[-1], header[1:], 
-                    y_fwd_smoothed_21, y_rvs_smoothed_21, y_fwd_smoothed_22, 
-                    y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24))
-
-    for i in aln_counts:
-        print i[0], i[1], i[2], i[5], i[8]
+                    x_label, y_lim, pub)
 
 
 
@@ -310,7 +301,6 @@ def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
     """
     aln_counts = [] #for getting alignment counts for each 
                     #sRNA class and each ref seq
-    circos_results = []
     ref_seq_count = 0
     # Load all refs --> need to be in a single file I think
     refs = ref_dict.load_ref_file(ref_file)
