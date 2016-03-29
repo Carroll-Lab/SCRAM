@@ -19,9 +19,11 @@ import time
 
 def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50, 
     fileFig = False, fileName = 'plot.pdf', min_read_size = 18, 
-    max_read_size = 32, min_read_no=1, onscreen = False, pub=False):
+    max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
+    pub=False):
     """
-    TODO:
+    Aligns reads from a single read file to a single reference sequence for
+    a single sRNA size.
     """
 
     ref = ref_dict.load_ref_file(ref_file)
@@ -33,30 +35,30 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     single_ref = ref[0][ref[1]]
     start = time.clock()
     single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
-    write_to_file.csv_output(single_alignment,nt,seq_file,
-                         ref_file.split('/')[-1])
-    
-    #TODO: mod for producing a figure - shouldn't do if not required
-    single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
-    
-
-    graph_processed = post_process.fill_in_zeros(single_sorted_alignemts, 
-        len(ref[0][ref[1]]), nt)
-    x_label = ref[1][1:]
-    x_ref = graph_processed[0]
-    y_fwd_smoothed = post_process.smooth(numpy.array(graph_processed[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
-        smoothWinSize, window='blackman')
-    print "\n{0} nt alignment time time = {1} seconds\n"\
-        .format(nt, str((time.clock() - start)))
-    
-
-    if onscreen:
+    if no_csv:
+        write_to_file.csv_output(single_alignment,
+                                 nt,
+                                 seq_file.split('/')[-1].split('.')[-2],
+                                 ref_file.split('/')[-1].split('.')[-2])   
+    if fileFig or onscreen:
+        single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
+        graph_processed = post_process.fill_in_zeros(single_sorted_alignemts, 
+            len(ref[0][ref[1]]), nt)
+        x_label = ref[1][1:]
+        x_ref = graph_processed[0]
+        y_fwd_smoothed = post_process.smooth(numpy.array(graph_processed[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
+            smoothWinSize, window='blackman')
+        print "\n{0} nt alignment time time = {1} seconds\n"\
+            .format(nt, str((time.clock() - start)))
+        
         if fileName == "auto":
             seq_name = seq_file.split('/')[-1].split('.')[0]
-            fileName = "{0}_{1}nt.pdf".format(seq_name, str(nt))
-            
+            ref_name = ref_file.split('/')[-1].split('.')[0]
+            fileName = "{0}_{1}_{2}.pdf".format(ref_name, 
+                                                  seq_name, str(nt))
+                
         plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
             fileName, onscreen, x_label, pub)
 
@@ -65,9 +67,10 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
 def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt, 
     smoothWinSize=50, fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, 
-    onscreen = False, pub=False):
+    onscreen = False, no_csv=False, pub=False):
     """
-    TODO: fix fig output
+    Aligns average no. of reads from a pair of read files 
+    to a single reference sequence for a single sRNA size.
     """
 
     ref = ref_dict.load_ref_file(ref_file)
@@ -79,20 +82,37 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     single_ref = ref[0][ref[1]]
     start = time.clock()
     single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
-
-    single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
-    graph_processed = post_process.fill_in_zeros(single_sorted_alignemts, 
-        len(ref[0][ref[1]]), nt)
-    x_label = ref[1][1:]
-    x_ref = graph_processed[0]
-    y_fwd_smoothed = post_process.smooth(numpy.array(graph_processed[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
-        smoothWinSize, window='blackman')
-    print "\n{0} nt alignment time = {0} seconds\n"\
-        .format(nt, str((time.clock() - start)))
-    plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-        fileName, onscreen, x_label, pub)
+    
+    #this is a hack
+    s1_name = seq_file_1.split('/')[-1].split('.')[-2]
+    s2_name = seq_file_2.split('/')[-1].split('.')[-2]
+    seq_file_name =  s1_name + '_' + s2_name
+    
+    if no_csv:
+        write_to_file.csv_output(single_alignment,nt, seq_file_name,
+                             ref_file.split('/')[-1].split('.')[-2]) 
+    if fileFig or onscreen:
+        
+        single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
+        graph_processed = post_process.fill_in_zeros(single_sorted_alignemts, 
+            len(ref[0][ref[1]]), nt)
+        x_label = ref[1][1:]
+        x_ref = graph_processed[0]
+        y_fwd_smoothed = post_process.smooth(numpy.array(graph_processed[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
+            smoothWinSize, window='blackman')
+        print "\n{0} nt alignment time = {0} seconds\n"\
+            .format(nt, str((time.clock() - start)))
+        
+        if fileName == "auto":
+            ref_name = ref_file.split('/')[-1].split('.')[0]
+            fileName = "{0}_{1}_{2}.pdf".format(ref_name, 
+                                                  seq_file_name,
+                                                  str(nt))        
+        
+        plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
+            fileName, onscreen, x_label, pub)
 
 
 
