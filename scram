@@ -189,7 +189,8 @@ USAGE
                                          max_read, 
                                          min_count, 
                                          no_display,
-                                         no_csv, 
+                                         no_csv,
+                                         ylim, 
                                          pub)  #fix the trues
 
         elif ana == 'denAv':
@@ -205,7 +206,8 @@ USAGE
                                             max_read, 
                                             min_count, 
                                             no_display,
-                                            no_csv, 
+                                            no_csv,
+                                            ylim, 
                                             pub)  
  
         elif ana == 'mnt3dm':

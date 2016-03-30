@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt # @Reimport
 
 def den_plot(x_ref, 
         y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-        fileName, onscreen, x_label, pub = False):
+        fileName, onscreen, x_label, plot_ylim, pub = False):
     """
     TODO: add y_lim adjustment
     Single sRNA length den map plot:
@@ -39,6 +39,8 @@ def den_plot(x_ref,
         xlabel(x_label)
         ylabel('Reads per million reads')
         plt.legend(loc='upper left',borderaxespad=0)
+    if plot_ylim !=0:
+        ylim(-plot_ylim, plot_ylim)
     fig1 = plt.gcf()
     if onscreen:
         plt.show()

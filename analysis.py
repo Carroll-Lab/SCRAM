@@ -17,11 +17,12 @@ import plot_reads
 import time
 
 #TODO: make seq file name function
+#TODO: make single function for same bits of den and denAv etc.
 
 def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50, 
     fileFig = False, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-    pub=False):
+    ylim=0, pub=False):
     """
     Aligns reads from a single read file to a single reference sequence for
     a single sRNA size.
@@ -61,14 +62,14 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
                                                   seq_name, str(nt))
                 
         plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-            fileName, onscreen, x_label, pub)
+            fileName, onscreen, x_label, ylim, pub)
 
 
 
 def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt, 
     smoothWinSize=50, fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, 
-    onscreen = False, no_csv=False, pub=False):
+    onscreen = False, no_csv=False, ylim=0, pub=False):
     """
     Aligns average no. of reads from a pair of read files 
     to a single reference sequence for a single sRNA size.
@@ -113,7 +114,7 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
                                                   str(nt))        
         
         plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-            fileName, onscreen, x_label, pub)
+            fileName, onscreen, x_label, ylim, pub)
 
 
 
