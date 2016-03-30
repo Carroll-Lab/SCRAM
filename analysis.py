@@ -16,6 +16,7 @@ import numpy
 import plot_reads
 import time
 
+#TODO: make seq file name function
 
 def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50, 
     fileFig = False, fileName = 'plot.pdf', min_read_size = 18, 
@@ -118,7 +119,8 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
 
 def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-    max_read_size = 32, min_read_no=1, onscreen = True, y_lim=0, pub=False):
+    max_read_size = 32, min_read_no=1, onscreen = True, no_csv=False,
+    y_lim=0, pub=False):
     """
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
@@ -140,37 +142,48 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
     single_sorted_alignemts_22 = align.aln_by_ref_pos(single_alignment_22)
     print '\n24nt sRNAs:'
     single_sorted_alignemts_24 = align.aln_by_ref_pos(single_alignment_24)
-
-    graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
-        len(ref[0][ref[1]]),21)
-    graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
-        len(ref[0][ref[1]]),22)
-    graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
-        len(ref[0][ref[1]]),24)
-
-    x_ref = graph_processed_21[0]
-    x_label = ref[1][1:]
-    y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
-        smoothWinSize, window='blackman')
-    y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
-        smoothWinSize, window='blackman')
-    y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
-        smoothWinSize, window='blackman')
-
-
-    plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
-    y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
-    fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
+    if no_csv:
+        write_to_file.mnt_csv_output(single_alignment_21, single_alignment_22,
+                                 single_alignment_24,
+                                 seq_file.split('/')[-1].split('.')[-2],
+                                 ref_file.split('/')[-1].split('.')[-2]) 
+    if fileFig or onscreen:
+    
+        graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
+            len(ref[0][ref[1]]),21)
+        graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
+            len(ref[0][ref[1]]),22)
+        graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
+            len(ref[0][ref[1]]),24)
+    
+        x_ref = graph_processed_21[0]
+        x_label = ref[1][1:]
+        y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
+            smoothWinSize, window='blackman')
+        y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
+            smoothWinSize, window='blackman')
+        y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
+            smoothWinSize, window='blackman')
+    
+        if fileName == "auto":
+            seq_name = seq_file.split('/')[-1].split('.')[0]
+            ref_name = ref_file.split('/')[-1].split('.')[0]
+            fileName = "{0}_{1}.pdf".format(ref_name, seq_name) 
+    
+        plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
+        y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
+        fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
 
 def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file, 
     smoothWinSize=50, fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-    max_read_size = 32, min_read_no=1, onscreen = True, y_lim=0, pub=False):
+    max_read_size = 32, min_read_no=1, onscreen = True, no_csv=False,
+    y_lim=0, pub=False):
     """
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
@@ -192,33 +205,46 @@ def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file,
     single_sorted_alignemts_22 = align.aln_by_ref_pos(single_alignment_22)
     print '\n24nt sRNAs:'
     single_sorted_alignemts_24 = align.aln_by_ref_pos(single_alignment_24)
-
-    graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
-        len(ref[0][ref[1]]),21)
-    graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
-        len(ref[0][ref[1]]),22)
-    graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
-        len(ref[0][ref[1]]),24)
-
-    x_ref = graph_processed_21[0]
-    x_label = ref[1][1:]
-    y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
-        smoothWinSize, window='blackman')
-    y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
-        smoothWinSize, window='blackman')
-    y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
-        smoothWinSize, window='blackman')
-    y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
-        smoothWinSize, window='blackman')
-
-
-    plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
-    y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
-    fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
+    #this is a hack
+    s1_name = seq_file_1.split('/')[-1].split('.')[-2]
+    s2_name = seq_file_2.split('/')[-1].split('.')[-2]
+    seq_file_name =  s1_name + '_' + s2_name
+    if no_csv:
+        write_to_file.mnt_csv_output(single_alignment_21, single_alignment_22,
+                             single_alignment_24,
+                             seq_file_name,
+                             ref_file.split('/')[-1].split('.')[-2]) 
+    if fileFig or onscreen:    
+    
+        graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
+            len(ref[0][ref[1]]),21)
+        graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
+            len(ref[0][ref[1]]),22)
+        graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
+            len(ref[0][ref[1]]),24)
+    
+        x_ref = graph_processed_21[0]
+        x_label = ref[1][1:]
+        y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
+            smoothWinSize, window='blackman')
+        y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
+            smoothWinSize, window='blackman')
+        y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
+            smoothWinSize, window='blackman')
+        y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
+            smoothWinSize, window='blackman')
+    
+        if fileName == "auto":
+            ref_name = ref_file.split('/')[-1].split('.')[0]
+            fileName = "{0}_{1}.pdf".format(ref_name, 
+                                                  seq_file_name)  
+        plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
+        y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
+        fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
 
 def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 

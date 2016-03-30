@@ -30,6 +30,12 @@ def csv_output(alignment_dict, nt, seq_file_name, header):
     csvfile.close()
 
 
+def mnt_csv_output(alignment_dict_21, alignment_dict_22, alignment_dict_24,
+                    seq_file_name, header):
+    csv_output(alignment_dict_21, 21, seq_file_name, header)
+    csv_output(alignment_dict_22, 22, seq_file_name, header)
+    csv_output(alignment_dict_24, 24, seq_file_name, header)        
+
 def cdp_output(counts_by_ref, header1, header2, nt):
     out_file = "{0}_{1}_{2}nt.csv".format(header1, header2, nt)
     results_list=[]

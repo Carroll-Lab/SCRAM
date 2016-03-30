@@ -18,7 +18,7 @@ Command line module
 '''
 
 import sys 
-import os
+#import os
 import analysis
 
 from argparse import ArgumentParser
@@ -53,7 +53,7 @@ def main(argv=None): # IGNORE:C0111
     else:
         sys.argv.extend(argv)
 
-    program_name = os.path.basename(sys.argv[0])
+    #program_name = os.path.basename(sys.argv[0])
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
     program_version_message = '%%(prog)s %s (%s)' % (program_version, 
@@ -178,6 +178,7 @@ USAGE
             fileFig=True        
  
         if ana == 'den':
+            #TODO: ylim
             analysis.single_ref_coverage(seq1, 
                                          ref, 
                                          nt, 
@@ -192,6 +193,7 @@ USAGE
                                          pub)  #fix the trues
 
         elif ana == 'denAv':
+            #TODO: ylim
             analysis.single_ref_coverage_av(seq1, 
                                             seq2, 
                                             ref, 
@@ -215,7 +217,8 @@ USAGE
                                                   min_read, 
                                                   max_read, 
                                                   min_count, 
-                                                  no_display, 
+                                                  no_display,
+                                                  no_csv, 
                                                   ylim, 
                                                   pub)
         elif ana == 'mnt3dmAv':
@@ -228,7 +231,8 @@ USAGE
                                                      min_read, 
                                                      max_read, 
                                                      min_count, 
-                                                     no_display, 
+                                                     no_display,
+                                                     no_csv, 
                                                      ylim, 
                                                      pub)
         elif ana == 'multiDen':
