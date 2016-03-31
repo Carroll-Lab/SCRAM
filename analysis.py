@@ -8,15 +8,12 @@ Analysis module
 """
 import ref_dict
 import seq_dict
-import post_process
 import write_to_file
 import cdp
 import align
-import numpy
 import plot_reads
-import time
 import analysis_helper as ah
-
+import den as dn
 
 #TODO: make single function for same bits of multiden and multidenAv etc.
 
@@ -34,7 +31,7 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     
     single_seq_output = ah.single_file_output(seq_file)
     
-    ref_coverage(seq, single_seq_output, ref_file, nt, smoothWinSize, fileFig, 
+    dn.ref_coverage(seq, single_seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
                  onscreen, no_csv, ylim, pub)
     
@@ -54,49 +51,10 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
 
     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
     
-    ref_coverage(seq, rep_seq_output, ref_file, nt, smoothWinSize, fileFig, 
+    dn.ref_coverage(seq, rep_seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
                  onscreen, no_csv, ylim, pub)   
     
-def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig, 
-                 fileName, min_read_size, max_read_size, min_read_no, 
-                 onscreen, no_csv, ylim, pub):
-    
-    ref = ref_dict.load_ref_file(ref_file)
-    
-    if len(ref[0])>1:
-        print "\nMutliple reference sequences in file.  \
-        1st seq. used for alignment"
-
-    ref_output = ah.single_file_output(ref_file)
-    
-    
-    single_ref = ref[0][ref[1]]
-    start = time.clock()
-    single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
-    if no_csv:
-        write_to_file.csv_output(single_alignment,
-                                 nt,
-                                 seq_output,
-                                 ref_output)   
-    if fileFig or onscreen:
-        single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
-        graph_processed = post_process.fill_in_zeros(single_sorted_alignemts, 
-            len(ref[0][ref[1]]), nt)
-        x_label = ref[1][1:]
-        x_ref = graph_processed[0]
-        y_fwd_smoothed = post_process.smooth(numpy.array(graph_processed[1]), 
-            smoothWinSize, window='blackman')
-        y_rvs_smoothed = post_process.smooth(numpy.array(graph_processed[2]), 
-            smoothWinSize, window='blackman')
-        print "\n{0} nt alignment time time = {1} seconds\n"\
-            .format(nt, str((time.clock() - start)))
-        
-        if fileName == "auto":
-            fileName = ah.ref_seq_nt_output(seq_output, ref_output, nt, "pdf")
-                
-        plot_reads.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-            fileName, onscreen, x_label, ylim, pub)
 
 def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
@@ -110,10 +68,9 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
         min_read_size)
     single_seq_output = ah.single_file_output(seq_file)
     
-    coverage_21_22_24(seq, single_seq_output, ref_file, smoothWinSize, 
+    dn.coverage_21_22_24(seq, single_seq_output, ref_file, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
     onscreen, no_csv,y_lim, pub)
-
 
 
 
@@ -130,86 +87,22 @@ def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file,
 
     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
     
-    coverage_21_22_24(seq, rep_seq_output, ref_file, smoothWinSize, 
+    dn.coverage_21_22_24(seq, rep_seq_output, ref_file, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
     onscreen, no_csv,y_lim, pub)    
 
 
-def coverage_21_22_24(seq, seq_output, ref_file, smoothWinSize, 
-    fileFig, fileName, min_read_size, max_read_size, min_read_no,
-    onscreen, no_csv,y_lim, pub):     
-    
-    ref = ref_dict.load_ref_file(ref_file)
-    if len(ref[0])>1:
-        print "\nMutliple reference sequences in file.  1st seq. used for \
-        alignment"
- 
-    ref_output = ah.single_file_output(ref_file)
-    
-    single_ref = ref[0][ref[1]]
-    single_alignment_21 = align.align_reads_to_seq(seq, single_ref, 21)
-    single_alignment_22 = align.align_reads_to_seq(seq, single_ref, 22)        
-    single_alignment_24 = align.align_reads_to_seq(seq, single_ref, 24)
-
-    print '\n21nt sRNAs:'
-    single_sorted_alignemts_21 = align.aln_by_ref_pos(single_alignment_21)
-    print '\n22nt sRNAs:'
-    single_sorted_alignemts_22 = align.aln_by_ref_pos(single_alignment_22)
-    print '\n24nt sRNAs:'
-    single_sorted_alignemts_24 = align.aln_by_ref_pos(single_alignment_24)
-    if no_csv:
-        write_to_file.mnt_csv_output(single_alignment_21, single_alignment_22,
-                                 single_alignment_24,
-                                 seq_output,
-                                 ref_output) 
-    if fileFig or onscreen:
-    
-        graph_processed_21 = post_process.fill_in_zeros(single_sorted_alignemts_21, 
-            len(ref[0][ref[1]]),21)
-        graph_processed_22 = post_process.fill_in_zeros(single_sorted_alignemts_22, 
-            len(ref[0][ref[1]]),22)
-        graph_processed_24 = post_process.fill_in_zeros(single_sorted_alignemts_24, 
-            len(ref[0][ref[1]]),24)
-    
-        x_ref = graph_processed_21[0]
-        x_label = ref[1][1:]
-        y_fwd_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[1]), 
-            smoothWinSize, window='blackman')
-        y_rvs_smoothed_21 = post_process.smooth(numpy.array(graph_processed_21[2]), 
-            smoothWinSize, window='blackman')
-        y_fwd_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[1]), 
-            smoothWinSize, window='blackman')
-        y_rvs_smoothed_22 = post_process.smooth(numpy.array(graph_processed_22[2]), 
-            smoothWinSize, window='blackman')
-        y_fwd_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[1]), 
-            smoothWinSize, window='blackman')
-        y_rvs_smoothed_24 = post_process.smooth(numpy.array(graph_processed_24[2]), 
-            smoothWinSize, window='blackman')
-    
-        if fileName == "auto":
-            fileName = ah.ref_seq_output(seq_output, ref_output, "pdf")
-    
-        plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
-        y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, y_rvs_smoothed_24,
-        fileFig, fileName, onscreen, x_label, y_lim, pub) #fix the True
-
-#TODO: fix the below functions
 def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
-    fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-    max_read_size = 32, min_read_no=1, onscreen = False, circos = False, 
+    fileFig = True, fileName = 'auto', min_read_size = 18, 
+    max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
     y_lim = 0, pub=False):
     """
     Complete for mutliple seq and ref files 
     See single_ref_coerage_21_22_24 for default values
     pairwise alignments for all seqs and refs will take place
     """
-    aln_counts = [] 
-    ref_seq_count = 0
-    # Load all refs --> need to be in a single file I think
+
     refs = ref_dict.load_ref_file(ref_file)
-
-
-    # Load all seqs - start with full/rel path and not just names
 
     seqs = seq_dict.load_seq_list(seq_list) 
     
@@ -217,90 +110,26 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
 
         seq = seq_dict.load_seq_file(single_seq, max_read_size, min_read_no, 
             min_read_size) 
-        ref_seq_count = 0
+        single_seq_output = ah.single_file_output(single_seq)
         for header, single_ref in refs[0].iteritems():
-            ref_seq_count +=1
-            single_alignment_21 = align.align_reads_to_seq(seq, single_ref, 21)
-            single_alignment_22 = align.align_reads_to_seq(seq, single_ref, 22)        
-            single_alignment_24 = align.align_reads_to_seq(seq, single_ref, 24)
-
-            print '\n21nt sRNAs:'
-            single_sorted_alignemts_21\
-             = align.aln_by_ref_pos(single_alignment_21)
-            print '\n22nt sRNAs:'
-            single_sorted_alignemts_22\
-             = align.aln_by_ref_pos(single_alignment_22)
-            print '\n24nt sRNAs:'
-            single_sorted_alignemts_24\
-             = align.aln_by_ref_pos(single_alignment_24)
-
-            #get strand counts
-            FR21 = post_process.calc_alignments_by_strand\
-            (single_sorted_alignemts_21)
-            FR22 = post_process.calc_alignments_by_strand\
-            (single_sorted_alignemts_22)
-            FR24 = post_process.calc_alignments_by_strand\
-            (single_sorted_alignemts_24)
-            
-            aln_counts.append((header, single_seq, 
-                               single_sorted_alignemts_21[2],\
-             FR21[0], FR21[1], single_sorted_alignemts_22[2], FR22[0], 
-             FR22[1], single_sorted_alignemts_24[2], FR24[0], FR24[1]))
-
-            graph_processed_21\
-             = post_process.fill_in_zeros(single_sorted_alignemts_21, 
-                 len(single_ref),21)
-            graph_processed_22 \
-            = post_process.fill_in_zeros(single_sorted_alignemts_22, 
-                len(single_ref),22)
-            graph_processed_24 \
-            = post_process.fill_in_zeros(single_sorted_alignemts_24, 
-                len(single_ref),24)
-
-            x_ref = graph_processed_21[0]
-
-            y_fwd_smoothed_21 = post_process.smooth(numpy.array\
-                (graph_processed_21[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_21 = post_process.smooth(numpy.array\
-                (graph_processed_21[2]), smoothWinSize, window='blackman')
-            y_fwd_smoothed_22 = post_process.smooth(numpy.array\
-                (graph_processed_22[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_22 = post_process.smooth(numpy.array\
-                (graph_processed_22[2]), smoothWinSize, window='blackman')
-            y_fwd_smoothed_24 = post_process.smooth(numpy.array\
-                (graph_processed_24[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_24 = post_process.smooth(numpy.array\
-                (graph_processed_24[2]), smoothWinSize, window='blackman')
-
-            fileName = header[1:]+'_'+single_seq.split('/')[-1]+'.pdf'
-            x_label = header[1:]
-
-            if fileFig:
-                plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, 
-                    y_rvs_smoothed_21, y_fwd_smoothed_22, y_rvs_smoothed_22, 
-                    y_fwd_smoothed_24, y_rvs_smoothed_24, fileFig, fileName, 
-                    onscreen, 
-                    x_label, y_lim, pub)
-
+            ref_output = ah.header_output(header)
+            dn.combined_21_22_24(seq, single_seq_output, ref_output, single_ref, 
+                                 smoothWinSize, fileFig, fileName, 
+                                 min_read_size, max_read_size, min_read_no,
+                                 onscreen, no_csv,y_lim, pub)
 
 
 def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-    max_read_size = 32, min_read_no=1, onscreen = False, circos = False, 
+    max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
     y_lim = 0, pub=False):
     """
     Complete for mutliple seq in replicate and ref files 
     See single_ref_coerage_21_22_24 for default values
     pairwise alignments for all seqs and refs will take place
     """
-    aln_counts = [] #for getting alignment counts for each 
-                    #sRNA class and each ref seq
-    ref_seq_count = 0
-    # Load all refs --> need to be in a single file I think
+    
     refs = ref_dict.load_ref_file(ref_file)
-
-
-    # Load all seqs - start with full/rel path and not just names
 
     seqs = seq_dict.load_av_seq_list(seq_list)
     
@@ -308,59 +137,14 @@ def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
 
         seq = seq_dict.load_av_seq_files(single_seq[0], single_seq[1], 
             max_read_size, min_read_no, min_read_size) 
-        ref_seq_count = 0
+        rep_seq_output = ah.rep_file_output(single_seq[0], single_seq[1])
+        
         for header, single_ref in refs[0].iteritems():
-            ref_seq_count +=1
-            single_alignment_21 = align.align_reads_to_seq(seq, single_ref, 21)
-            single_alignment_22 = align.align_reads_to_seq(seq, single_ref, 22)        
-            single_alignment_24 = align.align_reads_to_seq(seq, single_ref, 24)
-
-            print '\n21nt sRNAs:'
-            single_sorted_alignemts_21 = \
-            align.aln_by_ref_pos(single_alignment_21)
-            print '\n22nt sRNAs:'
-            single_sorted_alignemts_22 = \
-            align.aln_by_ref_pos(single_alignment_22)
-            print '\n24nt sRNAs:'
-            single_sorted_alignemts_24 = \
-            align.aln_by_ref_pos(single_alignment_24)
-
-            aln_counts.append((header, single_seq, 
-                               single_sorted_alignemts_21[2],\
-             single_sorted_alignemts_22[2], single_sorted_alignemts_24[2]))
-
-            graph_processed_21 = post_process.fill_in_zeros\
-            (single_sorted_alignemts_21, len(single_ref),21)
-            graph_processed_22 = post_process.fill_in_zeros\
-            (single_sorted_alignemts_22, len(single_ref),22)
-            graph_processed_24 = post_process.fill_in_zeros\
-            (single_sorted_alignemts_24, len(single_ref),24)
-
-            x_ref = graph_processed_21[0]
-
-            y_fwd_smoothed_21 = post_process.smooth(numpy.array\
-                (graph_processed_21[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_21 = post_process.smooth(numpy.array\
-                (graph_processed_21[2]), smoothWinSize, window='blackman')
-            y_fwd_smoothed_22 = post_process.smooth(numpy.array\
-                (graph_processed_22[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_22 = post_process.smooth(numpy.array\
-                (graph_processed_22[2]), smoothWinSize, window='blackman')
-            y_fwd_smoothed_24 = post_process.smooth(numpy.array\
-                (graph_processed_24[1]), smoothWinSize, window='blackman')
-            y_rvs_smoothed_24 = post_process.smooth(numpy.array\
-                (graph_processed_24[2]), smoothWinSize, window='blackman')
-
-            fileName = header[1:]+'_'+single_seq[0].split('/')[-1].\
-            split('.')[0][:-2]+'.pdf'
-            x_label = header[1:]
-
-            if fileFig:
-                plot_reads.den_multi_plot_3(x_ref, y_fwd_smoothed_21, 
-                    y_rvs_smoothed_21, y_fwd_smoothed_22, y_rvs_smoothed_22, 
-                    y_fwd_smoothed_24, y_rvs_smoothed_24, fileFig, 
-                    fileName, onscreen, 
-                    x_label, y_lim, pub)
+            ref_output = ah.header_output(header)
+            dn.combined_21_22_24(seq, rep_seq_output, ref_output, single_ref, 
+                                 smoothWinSize, fileFig, fileName, 
+                                 min_read_size, max_read_size, min_read_no,
+                                 onscreen, no_csv,y_lim, pub)
 
 
 def CDP(seq_file_1, seq_file_2, ref_file, nt, 

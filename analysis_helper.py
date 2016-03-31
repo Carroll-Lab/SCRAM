@@ -50,3 +50,9 @@ def ref_seq_output(in_seq_name, in_ref_name, ext):
     return "{0}_{1}.{2}".format(in_ref_name,
                                     in_seq_name,
                                     ext)
+def header_output(header):
+    """
+    Fill in
+    """
+    
+    return header[1:]
