@@ -36,8 +36,7 @@ def mnt_csv_output(alignment_dict_21, alignment_dict_22, alignment_dict_24,
     csv_output(alignment_dict_22, 22, seq_file_name, header)
     csv_output(alignment_dict_24, 24, seq_file_name, header)        
 
-def cdp_output(counts_by_ref, header1, header2, nt):
-    out_file = "{0}_{1}_{2}nt.csv".format(header1, header2, nt)
+def cdp_output(counts_by_ref, header1, header2, out_file):
     results_list=[]
     for header, counts in counts_by_ref.iteritems():
         results_list.append((header, counts[0], counts[1]))

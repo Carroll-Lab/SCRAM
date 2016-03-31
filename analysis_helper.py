@@ -56,3 +56,13 @@ def header_output(header):
     """
     
     return header[1:]
+
+def cdp_file_output(in_seq_name1, in_seq_name2, ref, nt, ext):
+    """
+    Fill in
+    """
+    return "{0}_{1}_{2}_{3}.{4}".format(in_seq_name1,
+                                    in_seq_name2,
+                                    ref,
+                                    nt,
+                                    ext)

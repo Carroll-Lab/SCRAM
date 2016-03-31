@@ -257,7 +257,7 @@ USAGE
                                                    ref, 
                                                    win, 
                                                    fileFig, 
-                                                   f, 
+                                                   "auto", 
                                                    min_read, 
                                                    max_read, 
                                                    min_count, 
