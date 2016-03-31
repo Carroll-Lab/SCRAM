@@ -33,7 +33,7 @@ def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig,
 
 def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, 
                      nt, fileFig, fileName,min_read_size, max_read_size, 
-                     min_read_no, onscreen, pub):
+                     min_read_no, onscreen, pub): 
     """
     Refactored CDP code shared between CDP_split and avCDP_split
     """
