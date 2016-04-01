@@ -11,7 +11,7 @@ import seq_dict
 import write_to_file
 import cdp
 import align
-import plot_reads
+#import plot_reads
 import analysis_helper as ah
 import den as dn
 

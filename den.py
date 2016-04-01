@@ -18,10 +18,7 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
                  fileName, min_read_size, max_read_size, min_read_no, 
                  onscreen, no_csv, ylim, pub):
     
-    """
-    Fill out
-    """
-    
+
     ref = ref_dict.load_ref_file(ref_file)
     
     if len(ref[0])>1:
