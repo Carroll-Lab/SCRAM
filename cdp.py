@@ -4,7 +4,7 @@ Created on 25 Feb 2016
 @author: steve
 '''
 import align
-import ref_dict
+from ref_seq import Ref_Seq
 import write_to_file as wtf
 import analysis_helper as ah
 import plot_reads as pr
@@ -17,10 +17,11 @@ def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig,
     """
     Refactored CDP code shared between CDP and avCDP
     """
-    refs = ref_dict.load_ref_file(ref_file)
+    refs=Ref_Seq()
+    refs.load_ref_file(ref_file)
     counts_by_ref = {} #header:(count1, count2)
     
-    for header, single_ref in refs[0].iteritems():
+    for header, single_ref in refs:
         single_alignment_1 = align.count_align_reads_to_seq(seq_1, 
                                                             single_ref, nt)
         single_alignment_2 = align.count_align_reads_to_seq(seq_2, 
@@ -38,13 +39,14 @@ def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
     Refactored CDP code shared between CDP_split and avCDP_split
     """
        
-    refs = ref_dict.load_ref_file(ref_file)
+    refs=Ref_Seq()
+    refs.load_ref_file(ref_file)
     
     alignment_dict_1={} #header:aligned_sRNAs
     alignment_dict_2={}
     
     #calc aligned sRNAs for each header, duplicate if necessary
-    for header, single_ref in refs[0].iteritems():
+    for header, single_ref in refs:
         aligned_reads_1 = dict_align_reads_to_seq_split(seq_1, single_ref, nt)
         aligned_reads_2 = dict_align_reads_to_seq_split(seq_2, single_ref, nt)        
     #makes a nested dictionary    
@@ -174,7 +176,7 @@ def header_x_y_counts(header_split_count_1, header_split_count_2, refs):
     """
     #construct x,y counts for each header
     counts_by_ref = {}
-    for header in refs[0]:
+    for header in refs.headers():
         if header in header_split_count_1 and header in header_split_count_2:
             counts_by_ref[header] = (header_split_count_1[header], 
                                      header_split_count_2[header])

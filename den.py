@@ -3,8 +3,7 @@ Created on 31 Mar 2016
 
 @author: steve
 '''
-
-import ref_dict
+from ref_seq import Ref_Seq
 import time
 import align
 import analysis_helper as ah
@@ -17,18 +16,20 @@ import plot_reads as pr
 def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
                  onscreen, no_csv, ylim, pub):
+    """
+    Fill out
+    """
     
-
-    ref = ref_dict.load_ref_file(ref_file)
+    ref = Ref_Seq()
+    ref.load_ref_file(ref_file)
     
-    if len(ref[0])>1:
-        print "\nMutliple reference sequences in file.  \
-        1st seq. used for alignment"
-
+    if len(ref)>1:
+        print "\nMultiple reference sequences in file. Use multiDen instead.\n"
+        return 
     ref_output = ah.single_file_output(ref_file)
-    
-    
-    single_ref = ref[0][ref[1]]
+    #this is a hack    
+    for header in ref.headers():
+        single_ref=ref[header]
     start = time.clock()
     single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
     if no_csv:
@@ -39,8 +40,7 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
     if fileFig or onscreen:
         single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
         graph_processed = pp.fill_in_zeros(single_sorted_alignemts, 
-            len(ref[0][ref[1]]), nt)
-        x_label = ref[1][1:]
+            len(single_ref), nt)
         x_ref = graph_processed[0]
         y_fwd_smoothed = pp.smooth(numpy.array(graph_processed[1]), 
             smoothWinSize, window='blackman')
@@ -53,7 +53,7 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
             fileName = ah.ref_seq_nt_output(seq_output, ref_output, nt, "pdf")
                 
         pr.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, fileFig, 
-            fileName, onscreen, x_label, ylim, pub)
+            fileName, onscreen, ref_output, ylim, pub)
 
 def coverage_21_22_24(seq, seq_output, ref_file, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
@@ -61,15 +61,15 @@ def coverage_21_22_24(seq, seq_output, ref_file, smoothWinSize,
     """
     Fill out
     """
-    ref = ref_dict.load_ref_file(ref_file)
-    if len(ref[0])>1:
-        print "\nMutliple reference sequences in file.  1st seq. used for \
-        alignment"
- 
+    ref = Ref_Seq()
+    ref.load_ref_file(ref_file)
+    if len(ref)>1:
+        print "\nMultiple reference sequences in file. Use multiDen instead.\n"
+        return 
     ref_output = ah.single_file_output(ref_file)
-    
-    single_ref = ref[0][ref[1]]
-    
+    #this is a hack
+    for header in ref.headers():
+        single_ref=ref[header]    
     combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
     onscreen, no_csv,y_lim, pub)    

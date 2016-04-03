@@ -6,12 +6,12 @@ Created on 22 Jan 2016
 """
 Analysis module
 """
-import ref_dict
-import seq_dict
+from ref_seq import Ref_Seq
+from srna_seq import SRNA_Seq
+import srna_seq
 import write_to_file
 import cdp
 import align
-#import plot_reads
 import analysis_helper as ah
 import den as dn
 
@@ -26,7 +26,8 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     a single sRNA size.
     """
 
-    seq = seq_dict.load_seq_file(seq_file, 
+    seq=SRNA_Seq()
+    seq.load_seq_file(seq_file, 
         max_read_size, min_read_no, min_read_size)
     
     single_seq_output = ah.single_file_output(seq_file)
@@ -46,7 +47,8 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     """
 
 
-    seq = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
+    seq=SRNA_Seq()
+    seq.load_av_seq_files(seq_file_1, seq_file_2, 
         max_read_size, min_read_no, min_read_size)
 
     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
@@ -64,7 +66,8 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
 
-    seq = seq_dict.load_seq_file(seq_file, max_read_size, min_read_no, 
+    seq=SRNA_Seq()
+    seq.load_seq_file(seq_file, max_read_size, min_read_no, 
         min_read_size)
     single_seq_output = ah.single_file_output(seq_file)
     
@@ -82,7 +85,8 @@ def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file,
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
 
-    seq = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
+    seq=SRNA_Seq()
+    seq.load_av_seq_files(seq_file_1, seq_file_2, 
         max_read_size, min_read_no, min_read_size) 
 
     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
@@ -102,16 +106,18 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
     pairwise alignments for all seqs and refs will take place
     """
 
-    refs = ref_dict.load_ref_file(ref_file)
+    refs = Ref_Seq()
+    refs.load_ref_file(ref_file)
 
-    seqs = seq_dict.load_seq_list(seq_list) 
+    seqs = srna_seq.load_seq_list(seq_list) 
     
     for single_seq in seqs:
 
-        seq = seq_dict.load_seq_file(single_seq, max_read_size, min_read_no, 
+        seq=SRNA_Seq()
+        seq.load_seq_file(single_seq, max_read_size, min_read_no, 
             min_read_size) 
         single_seq_output = ah.single_file_output(single_seq)
-        for header, single_ref in refs[0].iteritems():
+        for header, single_ref in refs:
             ref_output = ah.header_output(header)
             dn.combined_21_22_24(seq, single_seq_output, ref_output, single_ref, 
                                  smoothWinSize, fileFig, fileName, 
@@ -129,17 +135,19 @@ def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
     pairwise alignments for all seqs and refs will take place
     """
     
-    refs = ref_dict.load_ref_file(ref_file)
+    refs = Ref_Seq()
+    refs.load_ref_file(ref_file)
 
-    seqs = seq_dict.load_av_seq_list(seq_list)
+    seqs = srna_seq.load_av_seq_list(seq_list)
     
     for single_seq in seqs:
 
-        seq = seq_dict.load_av_seq_files(single_seq[0], single_seq[1], 
+        seq=SRNA_Seq()
+        seq.load_av_seq_files(single_seq[0], single_seq[1], 
             max_read_size, min_read_no, min_read_size) 
         rep_seq_output = ah.rep_file_output(single_seq[0], single_seq[1])
         
-        for header, single_ref in refs[0].iteritems():
+        for header, single_ref in refs:
             ref_output = ah.header_output(header)
             dn.combined_21_22_24(seq, rep_seq_output, ref_output, single_ref, 
                                  smoothWinSize, fileFig, fileName, 
@@ -156,11 +164,13 @@ def CDP(seq_file_1, seq_file_2, ref_file, nt,
     for 2 seq files.  No splitting of read count
     """  
 
+    seq_1=SRNA_Seq()
+    seq_1.load_seq_file(seq_file_1, max_read_size, min_read_no, 
+        min_read_size)
 
-    seq_1 = seq_dict.load_seq_file(seq_file_1, 
-        max_read_size, min_read_no, min_read_size)
-    seq_2 = seq_dict.load_seq_file(seq_file_2, 
-        max_read_size, min_read_no, min_read_size)    
+    seq_2=SRNA_Seq()
+    seq_2.load_seq_file(seq_file_2, max_read_size, min_read_no, 
+        min_read_size)    
     
     seq_name_1 = ah.single_file_output(seq_file_1)
     seq_name_2 = ah.single_file_output(seq_file_2)
@@ -179,10 +189,13 @@ def avCDP(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
     Plots alignment count for each sRNA in ref file as (x,y)
     for 2 sets of replicate seq files.  No splitting of read count
     """      
-    seq_1 = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
-        max_read_size, min_read_no, min_read_size)
-    seq_2 = seq_dict.load_av_seq_files(seq_file_3, seq_file_4, 
-        max_read_size, min_read_no, min_read_size)    
+    seq_1=SRNA_Seq()
+    seq_1.load_seq_file(seq_file_1, seq_file_2, max_read_size, min_read_no, 
+        min_read_size)
+
+    seq_2=SRNA_Seq()
+    seq_2.load_seq_file(seq_file_3, seq_file_4, max_read_size, min_read_no, 
+        min_read_size)     
     
     seq_name_1 = ah.rep_file_output(seq_file_1, seq_file_2)
     seq_name_2 = ah.rep_file_output(seq_file_3, seq_file_4)    
@@ -203,10 +216,13 @@ def CDP_split(seq_file_1, seq_file_2, ref_file, nt,
       
     """  
 
-    seq_1 = seq_dict.load_seq_file(seq_file_1, 
-        max_read_size, min_read_no, min_read_size)
-    seq_2 = seq_dict.load_seq_file(seq_file_2, 
-        max_read_size, min_read_no, min_read_size)    
+    seq_1=SRNA_Seq()
+    seq_1.load_seq_file(seq_file_1, max_read_size, min_read_no, 
+        min_read_size)
+
+    seq_2=SRNA_Seq()
+    seq_2.load_seq_file(seq_file_2, max_read_size, min_read_no, 
+        min_read_size)   
     
     seq_name_1 = ah.single_file_output(seq_file_1)
     seq_name_2 = ah.single_file_output(seq_file_2)
@@ -222,10 +238,13 @@ def avCDP_split(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
     pub=False):
  
 
-    seq_1 = seq_dict.load_av_seq_files(seq_file_1, seq_file_2, 
-        max_read_size, min_read_no, min_read_size)
-    seq_2 = seq_dict.load_av_seq_files(seq_file_3, seq_file_4, 
-        max_read_size, min_read_no, min_read_size)    
+    seq_1=SRNA_Seq()
+    seq_1.load_seq_file(seq_file_1, seq_file_2, max_read_size, min_read_no, 
+        min_read_size)
+
+    seq_2=SRNA_Seq()
+    seq_2.load_seq_file(seq_file_3, seq_file_4, max_read_size, min_read_no, 
+        min_read_size)     
  
     seq_name_1 = ah.rep_file_output(seq_file_1, seq_file_2)
     seq_name_2 = ah.rep_file_output(seq_file_3, seq_file_4) 
@@ -245,10 +264,13 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     TODO: may be incorrect - check with unit tests!!!!!!
     """
 
-    refs = ref_dict.load_ref_file(ref_file)
-    seq_1 = seq_dict.load_seq_file(seq_file_1, 
+    refs = Ref_Seq()
+    refs.load_ref_file(ref_file)
+    seq_1=SRNA_Seq()
+    seq_1.load_seq_file(seq_file_1, 
         max_read_size, min_read_no, min_read_size)
-
+    
+    seq_name_1 = ah.single_file_output(seq_file_1)
 
     alignment_dict_1={} #header:aligned_sRNAs
 
@@ -261,8 +283,8 @@ def CDP_single_split(seq_file_1, ref_file, nt,
 
     counts_by_ref = {} #header (align_count_1, align_count_2)
 
-    #calc aligned sRNAs for each header, duplicte if necessary
-    for header, single_ref in refs[0].iteritems():
+    #calc aligned sRNAs for each header, duplicate if necessary
+    for header, single_ref in refs:
 
         alignment_dict_1[header] = \
         align.list_align_reads_to_seq_split(seq_1, single_ref, nt)
@@ -283,12 +305,12 @@ def CDP_single_split(seq_file_1, ref_file, nt,
         for sRNA in sRNA_list:
             header_split_count_1[header] +=seq_1[sRNA]/sRNA_align_count_1[sRNA]
 
-    #counstruc x,y counts for each header
-    for header in refs[0]:
+    #construct x,y counts for each header
+    for header in refs.headers():
 
         counts_by_ref[header] = header_split_count_1[header]
 
 
     write_to_file.cdp_single_output(counts_by_ref, 
-                                    seq_file_1.split("/")[-1].split(".")[-2], 
+                                    seq_name_1, 
                                     nt)

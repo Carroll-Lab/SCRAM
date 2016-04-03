@@ -7,7 +7,6 @@ Created on 22 Jan 2016
 Align to seq/s to ref
 """
 import operator
-#import numpy
 
 
 def align_reads_to_seq(seq_dict, ref, sRNA_length):
