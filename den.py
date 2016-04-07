@@ -5,7 +5,8 @@ Created on 31 Mar 2016
 '''
 from ref_seq import Ref_Seq
 import time
-import align
+# import align
+from align_srna import Align_sRNA
 import analysis_helper as ah
 import numpy
 import write_to_file as wtf
@@ -31,14 +32,15 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
     for header in ref.headers():
         single_ref=ref[header]
     start = time.clock()
-    single_alignment = align.align_reads_to_seq(seq, single_ref, nt)
+    single_alignment = Align_sRNA()
+    single_alignment.align_reads_to_seq(seq, single_ref, nt)
     if no_csv:
         wtf.csv_output(single_alignment,
                                  nt,
                                  seq_output,
                                  ref_output)   
     if fileFig or onscreen:
-        single_sorted_alignemts = align.aln_by_ref_pos(single_alignment)
+        single_sorted_alignemts = single_alignment.aln_by_ref_pos()
         graph_processed = pp.fill_in_zeros(single_sorted_alignemts, 
             len(single_ref), nt)
         x_ref = graph_processed[0]
@@ -79,16 +81,19 @@ def combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize,
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
     onscreen, no_csv,y_lim, pub):
     
-    single_alignment_21 = align.align_reads_to_seq(seq, single_ref, 21)
-    single_alignment_22 = align.align_reads_to_seq(seq, single_ref, 22)        
-    single_alignment_24 = align.align_reads_to_seq(seq, single_ref, 24)
+    single_alignment_21 = Align_sRNA()
+    single_alignment_21.align_reads_to_seq(seq, single_ref, 21)
+    single_alignment_22 = Align_sRNA()    
+    single_alignment_22.align_reads_to_seq(seq, single_ref, 22)
+    single_alignment_24 = Align_sRNA()        
+    single_alignment_24.align_reads_to_seq(seq, single_ref, 24)
 
     print '\n21nt sRNAs:'
-    single_sorted_alignemts_21 = align.aln_by_ref_pos(single_alignment_21)
+    single_sorted_alignemts_21 = single_alignment_21.aln_by_ref_pos()
     print '\n22nt sRNAs:'
-    single_sorted_alignemts_22 = align.aln_by_ref_pos(single_alignment_22)
+    single_sorted_alignemts_22 = single_alignment_22.aln_by_ref_pos()
     print '\n24nt sRNAs:'
-    single_sorted_alignemts_24 = align.aln_by_ref_pos(single_alignment_24)
+    single_sorted_alignemts_24 = single_alignment_24.aln_by_ref_pos()
     if no_csv:
         wtf.mnt_csv_output(single_alignment_21, single_alignment_22,
                                  single_alignment_24,

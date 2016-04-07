@@ -11,7 +11,7 @@ from srna_seq import SRNA_Seq
 import srna_seq
 import write_to_file
 import cdp
-import align
+# import align
 import analysis_helper as ah
 import den as dn
 
@@ -287,7 +287,7 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     for header, single_ref in refs:
 
         alignment_dict_1[header] = \
-        align.list_align_reads_to_seq_split(seq_1, single_ref, nt)
+        cdp.list_align_reads_to_seq_split(seq_1, single_ref, nt)
         
     
     #calc no of times each sRNA is aligned - 1    

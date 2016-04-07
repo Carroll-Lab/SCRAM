@@ -22,9 +22,9 @@ def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig,
     counts_by_ref = {} #header:(count1, count2)
     
     for header, single_ref in refs:
-        single_alignment_1 = align.count_align_reads_to_seq(seq_1, 
+        single_alignment_1 = count_align_reads_to_seq(seq_1, 
                                                             single_ref, nt)
-        single_alignment_2 = align.count_align_reads_to_seq(seq_2, 
+        single_alignment_2 = count_align_reads_to_seq(seq_2, 
                                                             single_ref, nt)        
         if single_alignment_1 != 0 or single_alignment_2 !=0:
             counts_by_ref[header] = (single_alignment_1, single_alignment_2)
@@ -106,7 +106,28 @@ def count_align_reads_to_seq(seq_dict, ref, sRNA_length):
     return aligned_count
 
 
+def list_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
+    #TODO: this is wrong
+    """
+    Return mapped reads for a single ref_seq
+    pos is 5' end of read relative to 5' end of fwd strand
 
+    returns an integer
+    alignment_list --> [sRNA,sRNA,]
+    
+    """
+    count_start = 0
+    ref_complement = align.complement(ref)
+    alignment_list = [] #aligned sRNAs
+    while count_start < (len(ref) - (sRNA_length - 1)):
+        query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
+        query_seq_rvs = ref_complement[count_start:(count_start + sRNA_length)]
+        if query_seq_fwd in seq_dict:
+            alignment_list.append(query_seq_fwd)
+        if query_seq_rvs in seq_dict:
+            alignment_list.append(query_seq_rvs)
+        count_start += 1  
+    return alignment_list 
 
 def dict_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
     """
