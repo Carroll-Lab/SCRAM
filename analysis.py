@@ -11,7 +11,6 @@ from srna_seq import SRNA_Seq
 import srna_seq
 import write_to_file
 import cdp
-# import align
 import analysis_helper as ah
 import den as dn
 

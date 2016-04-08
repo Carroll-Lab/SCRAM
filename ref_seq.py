@@ -9,7 +9,7 @@ A class for reference sequences  - stores header:seq pairs in a dictionary
 {header:seq}
 """
 import time
-
+from dna import DNA
 
 class Ref_Seq(object):
     def __init__(self):
@@ -54,12 +54,12 @@ class Ref_Seq(object):
                 if first_header:
                     first_header = False
             elif line[0] == '>' and full_len_seq != '':
-                self._internal_dict.update({key: full_len_seq})
+                self._internal_dict.update({key: DNA(full_len_seq)})
                 key = line.strip()
                 full_len_seq = ''
                 ref_count += 1
             elif line[0] == '' and full_len_seq != '':
-                self._internal_dict.update({key: full_len_seq})
+                self._internal_dict.update({key: DNA(full_len_seq)})
                 key = line.strip()
                 full_len_seq = ''
             elif line[0] == '':
@@ -67,7 +67,7 @@ class Ref_Seq(object):
             else:
                 full_len_seq += line.strip().upper()
     
-        self._internal_dict.update({key: full_len_seq})
+        self._internal_dict.update({key: DNA(full_len_seq)})
     
         print '\n ---- {0} reference sequences loaded for alignment ----'\
             .format(ref_count)

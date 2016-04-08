@@ -4,6 +4,7 @@ Created on 4 Apr 2016
 @author: steve
 '''
 import operator
+from dna import DNA
 
 class Align_sRNA(object):
     
@@ -32,11 +33,11 @@ class Align_sRNA(object):
         count_start = 0
     # indv_seq_align_count = 0
 
-        ref_complement = complement(ref)
+        ref_complement = ref.complement()
     
         while count_start < (len(ref) - (sRNA_length - 1)):
-            query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
-            query_seq_rvs = ref_complement[count_start:(count_start + sRNA_length)]
+            query_seq_fwd = DNA(ref[count_start:(count_start + sRNA_length)])
+            query_seq_rvs = DNA(ref_complement[count_start:(count_start + sRNA_length)])
             if query_seq_fwd in seq_dict and query_seq_fwd not in self._internal_dict:
                 self._internal_dict[query_seq_fwd] = [
                     [count_start, seq_dict[query_seq_fwd]]]
@@ -84,14 +85,14 @@ class Align_sRNA(object):
         return [sorted_fwd_alignment, sorted_rvs_alignment, aln_count]
 
 
-
-
-def complement(seq):
-    """Provides the complement in the 5' - 3' direction
-
-    Assumption: reference consists of A, G, C, T only
-
-    complement(str) --> str
-    """
-    d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-    return (''.join(d[c] if c in d else c for c in reversed(seq)))        
+# 
+# 
+# def complement(seq):
+#     """Provides the complement in the 5' - 3' direction
+# 
+#     Assumption: reference consists of A, G, C, T only
+# 
+#     complement(str) --> str
+#     """
+#     d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+#     return (''.join(d[c] if c in d else c for c in reversed(seq)))        

@@ -4,7 +4,7 @@ Created on 1 Apr 2016
 @author: steve
 '''
 
-
+from dna import DNA
 import time
 
 class SRNA_Seq(object):
@@ -57,14 +57,14 @@ class SRNA_Seq(object):
                 next_line = True #ensure that the nextline has the correct seq.
             elif count >= min_reads and len(line.strip()) <= sRNA_max_len_cutoff \
             and len(line.strip()) >= sRNA_min_len_cutoff and next_line == True:
-                self._internal_dict[line.strip()] = count
+                self._internal_dict[DNA(line.strip())] = count
                 read_count_1 += count
                 next_line = False
             else:
                 pass
     
         loaded_seq_1.close()
-    
+
         # final RPMR - could simplify in future
         for sRNA, count in self._internal_dict.iteritems():
             self._internal_dict[sRNA] = count * (float(1000000) / read_count_1)
@@ -73,7 +73,7 @@ class SRNA_Seq(object):
         print "{0} has {1} loaded reads\n".format(seq_file.split('/')[-1],
                                                   read_count_1)
         print "-"*50
-      
+
 
   
     def load_av_seq_files(self, seq_file_1, seq_file_2, 
@@ -104,7 +104,7 @@ class SRNA_Seq(object):
                 next_line = True #ensure that the nextline has the correct seq.
             elif count >= min_reads and len(line.strip()) <= sRNA_max_len_cutoff \
             and len(line.strip()) >= sRNA_min_len_cutoff and next_line == True:
-                seq_dict_1[line.strip()] = count
+                seq_dict_1[DNA(line.strip())] = count
                 read_count_1 += count
                 next_line = False
             else:
@@ -119,7 +119,7 @@ class SRNA_Seq(object):
                 next_line = True #ensure that the nextline has the correct seq.
             elif count >= min_reads and len(line.strip()) <= sRNA_max_len_cutoff \
             and len(line.strip()) >= sRNA_min_len_cutoff and next_line == True:
-                seq_dict_2[line.strip()] = count
+                seq_dict_2[DNA(line.strip())] = count
                 read_count_2 += count
                 next_line = False
             else:

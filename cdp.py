@@ -3,7 +3,7 @@ Created on 25 Feb 2016
 
 @author: steve
 '''
-import align
+
 from ref_seq import Ref_Seq
 import write_to_file as wtf
 import analysis_helper as ah
@@ -91,7 +91,7 @@ def count_align_reads_to_seq(seq_dict, ref, sRNA_length):
     count_start = 0
     # indv_seq_align_count = 0
 
-    ref_complement = align.complement(ref)
+    ref_complement = ref.complement()
 
     while count_start < (len(ref) - (sRNA_length - 1)):
         query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
@@ -117,7 +117,7 @@ def list_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
     
     """
     count_start = 0
-    ref_complement = align.complement(ref)
+    ref_complement = ref.complement()
     alignment_list = [] #aligned sRNAs
     while count_start < (len(ref) - (sRNA_length - 1)):
         query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
@@ -137,7 +137,7 @@ def dict_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
     
     """
     count_start = 0
-    ref_complement = align.complement(ref)
+    ref_complement = ref.complement()
     split_alignment_dict = {} #aligned sRNAs
     while count_start < (len(ref) - (sRNA_length - 1)):
         query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
