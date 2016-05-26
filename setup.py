@@ -31,7 +31,7 @@ setup(name='scram',
     # that you indicate whether you support Python 2, Python 3 or both.
     'Programming Language :: Python :: 2.7'],
       install_requires=['numpy','matplotlib'],
-      scripts=['scram/scram',
+      scripts=['scram_modules/scram',
       'scram_modules/analysis.py',
       'scram_modules/align_srna.py',
       'scram_modules/analysis_helper.py',
