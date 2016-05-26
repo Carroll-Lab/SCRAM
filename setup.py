@@ -12,7 +12,7 @@ setup(name='scram',
       author='Stephen Fletcher',
       author_email='s.fletcher@uq.edu.au',
       license='MIT',
-      packages=['scram'],
+      packages=['scram_modules'],
       classifiers=[
     # How mature is this project? Common values are
     #   3 - Alpha
