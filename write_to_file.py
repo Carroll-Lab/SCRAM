@@ -16,7 +16,7 @@ def csv_output(alignment_dict, nt, seq_file_name, header):
     """
     alignment_list=[]
     
-    for sRNA, alignment in alignment_dict.iteritems():
+    for sRNA, alignment in alignment_dict:
         for i in alignment:
             alignment_list.append((sRNA,i[0],i[1]))
     alignment_list.sort(key=lambda tup : tup[1])

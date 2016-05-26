@@ -43,7 +43,7 @@ class SRNA_Seq(object):
         accepted (including for RPMR calculation)
         min_reads --> only reads >= min_reads accepted
     
-        produce seq_dict --> sRNA:av_RPMR
+        produce seq_dict --> sRNA:RPMR
         """
         start = time.clock()
 
