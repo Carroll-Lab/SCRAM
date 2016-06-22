@@ -15,8 +15,12 @@ class DNA(object):
     def __hash__(self):
         return hash((self.sequence))
 
+    def __repr__(self):
+        return self.sequence
+    
     def __eq__(self, other):
         return self.sequence == other.sequence
+    
     def complement(self):
         """Provides the complement in the 5' - 3' direction
 
@@ -26,6 +30,7 @@ class DNA(object):
         """
         d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
         return (''.join(d[c] if c in d else c for c in reversed(self.sequence))) 
+    
     def is_dna(self):
         """
         True if all nucleotides are from dna_alphabet

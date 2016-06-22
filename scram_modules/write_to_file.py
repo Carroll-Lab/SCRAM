@@ -25,7 +25,7 @@ def csv_output(alignment_dict, nt, seq_file_name, header):
         mycsv = csv.writer(csvfile, delimiter=',')
         mycsv.writerow(['sRNA','Position', 'Count'])
         for alignment in alignment_list:
-            out=[alignment[0],alignment[1],alignment[2]]
+            out=[str(alignment[0]),alignment[1],alignment[2]]
             mycsv.writerow(out)
     csvfile.close()
 
