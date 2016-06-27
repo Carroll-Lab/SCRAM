@@ -30,6 +30,12 @@ class Align_sRNA(object):
         return self._internal_dict.values()     
         
     def align_reads_to_seq(self, seq_dict, ref, sRNA_length):
+        """
+        
+        Aligns reads from a srna_seq object to a ref_seq object
+        
+        Returns {query seq: [position, count]} 
+        """ 
         count_start = 0
     # indv_seq_align_count = 0
 
@@ -52,6 +58,18 @@ class Align_sRNA(object):
                     [len(ref)-count_start-1, 0 - seq_dict[query_seq_rvs]])
             count_start += 1       
 
+    def split(self):
+        """
+        Splits the alignment count for a read by the number of times it has aligned.
+        
+        Returns an alignment object
+        """
+        for alignments in self._internal_dict.values():
+            for alignment in alignments:
+                alignment[1]/=len(alignments)
+        
+    
+    
     def aln_by_ref_pos(self):
         """
         Create 2 lists - fwd alignment and rvs alignment
@@ -84,15 +102,4 @@ class Align_sRNA(object):
         print "-"*50
         return [sorted_fwd_alignment, sorted_rvs_alignment, aln_count]
 
-
-# 
-# 
-# def complement(seq):
-#     """Provides the complement in the 5' - 3' direction
-# 
-#     Assumption: reference consists of A, G, C, T only
-# 
-#     complement(str) --> str
-#     """
-#     d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-#     return (''.join(d[c] if c in d else c for c in reversed(seq)))        
+    

@@ -191,7 +191,8 @@ USAGE
                                          no_display,
                                          no_csv,
                                          ylim, 
-                                         pub)  #fix the trues
+                                         pub,
+                                         split)
 
         elif ana == 'denAv':
             #TODO: ylim
@@ -208,7 +209,8 @@ USAGE
                                             no_display,
                                             no_csv,
                                             ylim, 
-                                            pub)  
+                                            pub,
+                                            split)  
  
         elif ana == 'mnt3dm':
             analysis.single_ref_coverage_21_22_24(seq1, 
@@ -222,7 +224,8 @@ USAGE
                                                   no_display,
                                                   no_csv, 
                                                   ylim, 
-                                                  pub)
+                                                  pub,
+                                                  split)
         elif ana == 'mnt3dmAv':
             analysis.single_ref_coverage_21_22_24_av(seq1, 
                                                      seq2,
@@ -236,7 +239,8 @@ USAGE
                                                      no_display,
                                                      no_csv, 
                                                      ylim, 
-                                                     pub)
+                                                     pub, 
+                                                     split)
         elif ana == 'multiDen':
             fileFig=True
             analysis.multi_seq_and_ref_21_22_24(seq_list, 
@@ -250,7 +254,8 @@ USAGE
                                                 False, 
                                                 False, 
                                                 ylim, 
-                                                pub)
+                                                pub,
+                                                split)
         elif ana == 'avMultiDen':
             fileFig=True
             analysis.av_multi_seq_and_ref_21_22_24(seq_list, 
@@ -264,7 +269,8 @@ USAGE
                                                    False, 
                                                    False, 
                                                    ylim, 
-                                                   pub)
+                                                   pub,
+                                                   split)
            
  
         

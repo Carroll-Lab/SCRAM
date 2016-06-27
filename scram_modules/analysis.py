@@ -19,7 +19,7 @@ import den as dn
 def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50, 
     fileFig = False, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-    ylim=0, pub=False):
+    ylim=0, pub=False, split=False):
     """
     Aligns reads from a single read file to a single reference sequence for
     a single sRNA size.
@@ -33,13 +33,13 @@ def single_ref_coverage(seq_file, ref_file, nt, smoothWinSize=50,
     
     dn.ref_coverage(seq, single_seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
-                 onscreen, no_csv, ylim, pub)
+                 onscreen, no_csv, ylim, pub, split)
     
 
 def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt, 
     smoothWinSize=50, fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, 
-    onscreen = False, no_csv=False, ylim=0, pub=False):
+    onscreen = False, no_csv=False, ylim=0, pub=False, split=False):
     """
     Aligns average no. of reads from a pair of read files 
     to a single reference sequence for a single sRNA size.
@@ -54,13 +54,13 @@ def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt,
     
     dn.ref_coverage(seq, rep_seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
-                 onscreen, no_csv, ylim, pub)   
+                 onscreen, no_csv, ylim, pub, split)   
     
 
 def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = True, no_csv=False,
-    y_lim=0, pub=False):
+    y_lim=0, pub=False, split=False):
     """
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
@@ -72,14 +72,14 @@ def single_ref_coverage_21_22_24(seq_file, ref_file, smoothWinSize=50,
     
     dn.coverage_21_22_24(seq, single_seq_output, ref_file, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
-    onscreen, no_csv,y_lim, pub)
+    onscreen, no_csv,y_lim, pub, split)
 
 
 
 def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file, 
     smoothWinSize=50, fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = True, no_csv=False,
-    y_lim=0, pub=False):
+    y_lim=0, pub=False, split=False):
     """
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
@@ -92,13 +92,13 @@ def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file,
     
     dn.coverage_21_22_24(seq, rep_seq_output, ref_file, smoothWinSize, 
     fileFig, fileName, min_read_size, max_read_size, min_read_no,
-    onscreen, no_csv,y_lim, pub)    
+    onscreen, no_csv,y_lim, pub, split)    
 
 
 def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'auto', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-    y_lim = 0, pub=False):
+    y_lim = 0, pub=False, split=False):
     """
     Complete for mutliple seq and ref files 
     See single_ref_coerage_21_22_24 for default values
@@ -121,13 +121,13 @@ def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
             dn.combined_21_22_24(seq, single_seq_output, ref_output, single_ref, 
                                  smoothWinSize, fileFig, fileName, 
                                  min_read_size, max_read_size, min_read_no,
-                                 onscreen, no_csv,y_lim, pub)
+                                 onscreen, no_csv,y_lim, pub, split)
 
 
 def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-    y_lim = 0, pub=False):
+    y_lim = 0, pub=False, split=False):
     """
     Complete for mutliple seq in replicate and ref files 
     See single_ref_coerage_21_22_24 for default values
@@ -151,7 +151,7 @@ def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50,
             dn.combined_21_22_24(seq, rep_seq_output, ref_output, single_ref, 
                                  smoothWinSize, fileFig, fileName, 
                                  min_read_size, max_read_size, min_read_no,
-                                 onscreen, no_csv,y_lim, pub)
+                                 onscreen, no_csv,y_lim, pub, split)
 
 
 def CDP(seq_file_1, seq_file_2, ref_file, nt, 
