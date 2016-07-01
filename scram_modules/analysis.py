@@ -216,11 +216,11 @@ def CDP_split(seq_file_1, seq_file_2, ref_file, nt,
     """  
 
     seq_1=SRNA_Seq()
-    seq_1.load_seq_file(seq_file_1, max_read_size, min_read_no, 
+    seq_1.load_av_seq_files(seq_file_1, max_read_size, min_read_no, 
         min_read_size)
 
     seq_2=SRNA_Seq()
-    seq_2.load_seq_file(seq_file_2, max_read_size, min_read_no, 
+    seq_2.load_av_seq_files(seq_file_2, max_read_size, min_read_no, 
         min_read_size)   
     
     seq_name_1 = ah.single_file_output(seq_file_1)
@@ -238,11 +238,11 @@ def avCDP_split(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt,
  
 
     seq_1=SRNA_Seq()
-    seq_1.load_seq_file(seq_file_1, seq_file_2, max_read_size, min_read_no, 
+    seq_1.load_av_seq_files(seq_file_1, seq_file_2, max_read_size, min_read_no, 
         min_read_size)
 
     seq_2=SRNA_Seq()
-    seq_2.load_seq_file(seq_file_3, seq_file_4, max_read_size, min_read_no, 
+    seq_2.load_av_seq_files(seq_file_3, seq_file_4, max_read_size, min_read_no, 
         min_read_size)     
  
     seq_name_1 = ah.rep_file_output(seq_file_1, seq_file_2)
