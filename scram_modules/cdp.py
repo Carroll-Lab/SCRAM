@@ -8,6 +8,7 @@ from ref_seq import Ref_Seq
 import write_to_file as wtf
 import analysis_helper as ah
 import plot_reads as pr
+from dna import DNA
 
 #TODO: sort a no csv option
 def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig, 
@@ -94,8 +95,8 @@ def count_align_reads_to_seq(seq_dict, ref, sRNA_length):
     ref_complement = ref.complement()
 
     while count_start < (len(ref) - (sRNA_length - 1)):
-        query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
-        query_seq_rvs = ref_complement[count_start:(count_start + sRNA_length)]
+        query_seq_fwd = DNA(ref[count_start:(count_start + sRNA_length)])
+        query_seq_rvs = DNA(ref_complement[count_start:(count_start + sRNA_length)])
         
         if query_seq_fwd in seq_dict:
             aligned_count += seq_dict[query_seq_fwd]
@@ -120,8 +121,8 @@ def list_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
     ref_complement = ref.complement()
     alignment_list = [] #aligned sRNAs
     while count_start < (len(ref) - (sRNA_length - 1)):
-        query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
-        query_seq_rvs = ref_complement[count_start:(count_start + sRNA_length)]
+        query_seq_fwd = DNA(ref[count_start:(count_start + sRNA_length)])
+        query_seq_rvs = DNA(ref_complement[count_start:(count_start + sRNA_length)])
         if query_seq_fwd in seq_dict:
             alignment_list.append(query_seq_fwd)
         if query_seq_rvs in seq_dict:
@@ -140,8 +141,8 @@ def dict_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
     ref_complement = ref.complement()
     split_alignment_dict = {} #aligned sRNAs
     while count_start < (len(ref) - (sRNA_length - 1)):
-        query_seq_fwd = ref[count_start:(count_start + sRNA_length)]
-        query_seq_rvs = ref_complement[count_start:(count_start + sRNA_length)]
+        query_seq_fwd = DNA(ref[count_start:(count_start + sRNA_length)])
+        query_seq_rvs = DNA(ref_complement[count_start:(count_start + sRNA_length)])
         if query_seq_fwd in seq_dict and query_seq_fwd in split_alignment_dict:
             split_alignment_dict[query_seq_fwd]+=1
         elif query_seq_fwd in seq_dict and query_seq_fwd\

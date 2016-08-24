@@ -38,7 +38,7 @@ def den_plot(x_ref,
     else:
         xlabel(x_label)
         ylabel('Reads per million reads')
-        plt.legend(loc='upper left',borderaxespad=0)
+        plt.legend(loc='best',fancybox=True, framealpha=0.5)
     if plot_ylim !=0:
         ylim(-plot_ylim, plot_ylim)
     fig1 = plt.gcf()
