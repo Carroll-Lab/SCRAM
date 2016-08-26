@@ -107,7 +107,7 @@ def cdp_plot(counts_by_ref, seq1, seq2, nt, onscreen, fileFig, fileName, pub):
     x-axis: seq1 reads aligned to reference
     y-axis: seq2 reads aligned to reference
     """
-    
+    pub=False #FIX THIS
     results_list=[]
     for counts in counts_by_ref.itervalues():
         results_list.append((counts[0]+0.01, counts[1]+0.01))

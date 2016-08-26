@@ -8,7 +8,6 @@ Analysis module
 """
 from ref_seq import Ref_Seq
 from srna_seq import SRNA_Seq
-#import srna_seq
 import write_to_file
 import cdp
 import analysis_helper as ah
@@ -25,7 +24,11 @@ def single_ref_coverage(seq_file_list, ref_file, nt, smoothWinSize=50,
     """
 
     seq=SRNA_Seq()
-    seq.load_seq_file_arg_list(seq_file_list, max_read_size, min_read_no, 
+    if len(seq_file_list)==1:
+        seq.load_seq_file(seq_file_list[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq.load_seq_file_arg_list(seq_file_list, max_read_size, min_read_no, 
         min_read_size)
     # single_seq_output = ah.single_file_output(seq_file)
     seq_name = ah.single_file_output(seq_file_list[0])
@@ -38,28 +41,7 @@ def single_ref_coverage(seq_file_list, ref_file, nt, smoothWinSize=50,
     dn.ref_coverage(seq, seq_name, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
                  onscreen, no_csv, ylim, pub, split)
-    
 
-# def single_ref_coverage_av(seq_file_1, seq_file_2, ref_file, nt, 
-#     smoothWinSize=50, fileFig=False, fileName = 'plot.pdf', 
-#     min_read_size = 18, max_read_size = 32, min_read_no=1, 
-#     onscreen = False, no_csv=False, ylim=0, pub=False, split=False):
-#     """
-#     Aligns average no. of reads from a pair of read files 
-#     to a single reference sequence for a single sRNA size.
-#     """
-# 
-# 
-#     seq=SRNA_Seq()
-#     seq.load_av_seq_files(seq_file_1, seq_file_2, 
-#         max_read_size, min_read_no, min_read_size)
-# 
-#     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
-#     
-#     dn.ref_coverage(seq, rep_seq_output, ref_file, nt, smoothWinSize, fileFig, 
-#                  fileName, min_read_size, max_read_size, min_read_no, 
-#                  onscreen, no_csv, ylim, pub, split)   
-    
 
 def single_ref_coverage_21_22_24(seq_file_list, ref_file, smoothWinSize=50, 
     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
@@ -70,7 +52,11 @@ def single_ref_coverage_21_22_24(seq_file_list, ref_file, smoothWinSize=50,
     """
 
     seq=SRNA_Seq()
-    seq.load_seq_file_arg_list(seq_file_list, max_read_size, min_read_no, 
+    if len(seq_file_list)==1:
+        seq.load_seq_file(seq_file_list[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq.load_seq_file_arg_list(seq_file_list, max_read_size, min_read_no, 
         min_read_size)
     # single_seq_output = ah.single_file_output(seq_file)
     seq_name = ah.single_file_output(seq_file_list[0])
@@ -85,144 +71,58 @@ def single_ref_coverage_21_22_24(seq_file_list, ref_file, smoothWinSize=50,
     onscreen, no_csv,y_lim, pub, split)
 
 
-
-# def single_ref_coverage_21_22_24_av(seq_file_1, seq_file_2, ref_file, 
-#     smoothWinSize=50, fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-#     max_read_size = 32, min_read_no=1, onscreen = True, no_csv=False,
-#     y_lim=0, pub=False, split=False):
-#     """
-#     Align reads from a single seq file to a single reference for 21,22 and 24nt
-#     """
-# 
-#     seq=SRNA_Seq()
-#     seq.load_av_seq_files(seq_file_1, seq_file_2, 
-#         max_read_size, min_read_no, min_read_size) 
-# 
-#     rep_seq_output = ah.rep_file_output(seq_file_1, seq_file_2)
-#     
-#     dn.coverage_21_22_24(seq, rep_seq_output, ref_file, smoothWinSize, 
-#     fileFig, fileName, min_read_size, max_read_size, min_read_no,
-#     onscreen, no_csv,y_lim, pub, split)    
-
-
-# def multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
-#     fileFig = True, fileName = 'auto', min_read_size = 18, 
-#     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-#     y_lim = 0, pub=False, split=False):
-#     """
-#     Complete for mutliple seq and ref files 
-#     See single_ref_coerage_21_22_24 for default values
-#     pairwise alignments for all seqs and refs will take place
-#     """
-# 
-#     refs = Ref_Seq()
-#     refs.load_ref_file(ref_file)
-# 
-#     seqs = srna_seq.load_seq_list(seq_list) 
-#     
-#     for single_seq in seqs:
-# 
-#         seq=SRNA_Seq()
-#         seq.load_seq_file(single_seq, max_read_size, min_read_no, 
-#             min_read_size) 
-#         single_seq_output = ah.single_file_output(single_seq)
-#         for header, single_ref in refs:
-#             ref_output = ah.header_output(header)
-#             dn.combined_21_22_24(seq, single_seq_output, ref_output, single_ref, 
-#                                  smoothWinSize, fileFig, fileName, 
-#                                  min_read_size, max_read_size, min_read_no,
-#                                  onscreen, no_csv,y_lim, pub, split)
-
-
-# def av_multi_seq_and_ref_21_22_24(seq_list, ref_file, smoothWinSize=50, 
-#     fileFig = True, fileName = 'plot.pdf', min_read_size = 18, 
-#     max_read_size = 32, min_read_no=1, onscreen = False, no_csv = False, 
-#     y_lim = 0, pub=False, split=False):
-#     """
-#     Complete for mutliple seq in replicate and ref files 
-#     See single_ref_coerage_21_22_24 for default values
-#     pairwise alignments for all seqs and refs will take place
-#     """
-#     
-#     refs = Ref_Seq()
-#     refs.load_ref_file(ref_file)
-# 
-#     seqs = srna_seq.load_av_seq_list(seq_list)
-#     
-#     for single_seq in seqs:
-# 
-#         seq=SRNA_Seq()
-#         seq.load_av_seq_files(single_seq[0], single_seq[1], 
-#             max_read_size, min_read_no, min_read_size) 
-#         rep_seq_output = ah.rep_file_output(single_seq[0], single_seq[1])
-#         
-#         for header, single_ref in refs:
-#             ref_output = ah.header_output(header)
-#             dn.combined_21_22_24(seq, rep_seq_output, ref_output, single_ref, 
-#                                  smoothWinSize, fileFig, fileName, 
-#                                  min_read_size, max_read_size, min_read_no,
-#                                  onscreen, no_csv,y_lim, pub, split)
-
-
-def CDP(seq_file_1, seq_file_2, ref_file, nt, 
+def CDP(seq_file_list_1, seq_file_list_2, ref_file, nt, 
     fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False,
-    pub=False):
+    pub=True,processes=4):
     """
     Plots alignment count for each sRNA in ref file as (x,y)
     for 2 seq files.  No splitting of read count
     """  
 
     seq_1=SRNA_Seq()
-    seq_1.load_seq_file_arg_list(seq_file_1, max_read_size, min_read_no, 
+    if len(seq_file_list_1)==1:
+        seq_1.load_seq_file(seq_file_list_1[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq_1.load_seq_file_arg_list(seq_file_list_1, max_read_size, min_read_no, 
         min_read_size)
 
     seq_2=SRNA_Seq()
-    seq_2.load_seq_file_arg_list(seq_file_2, max_read_size, min_read_no, 
+    if len(seq_file_list_2)==1:
+        seq_2.load_seq_file(seq_file_list_2[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq_2.load_seq_file_arg_list(seq_file_list_2, max_read_size, min_read_no, 
         min_read_size)    
     
-    seq_name_1 = ""
-    for i in seq_file_1:
-        seq_name_1+=ah.single_file_output(i)
-    seq_name_2 = ""
-    for i in seq_file_2:
-        seq_name_2+=ah.single_file_output(i)
+    #REPEATED CODE - new function required
+    seq_name_1 = ah.single_file_output(seq_file_list_1[0])
+    if len(seq_file_list_1)>1:
+        for i in range(len(seq_file_list_1)):
+            if i == 0:
+                pass
+            else:
+                seq_name_1+= "_{0}".format(ah.single_file_output(seq_file_list_1[i]))
+    
+    seq_name_2 = ah.single_file_output(seq_file_list_2[0])
+    if len(seq_file_list_2)>1:
+        for i in range(len(seq_file_list_2)):
+            if i == 0:
+                pass
+            else:
+                seq_name_2+= "_{0}".format(ah.single_file_output(seq_file_list_2[i]))
 
     
     cdp.CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig, 
                fileName, min_read_size, max_read_size, min_read_no, onscreen,
-               pub)
+               pub, processes)
 
 
-
-# def avCDP(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt, 
-#     fileFig=False, fileName = 'plot.pdf', 
-#     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False, 
-#     pub=False):
-#     """
-#     Plots alignment count for each sRNA in ref file as (x,y)
-#     for 2 sets of replicate seq files.  No splitting of read count
-#     """      
-#     seq_1=SRNA_Seq()
-#     seq_1.load_seq_file(seq_file_1, seq_file_2, max_read_size, min_read_no, 
-#         min_read_size)
-# 
-#     seq_2=SRNA_Seq()
-#     seq_2.load_seq_file(seq_file_3, seq_file_4, max_read_size, min_read_no, 
-#         min_read_size)     
-#     
-#     seq_name_1 = ah.rep_file_output(seq_file_1, seq_file_2)
-#     seq_name_2 = ah.rep_file_output(seq_file_3, seq_file_4)    
-#     
-#     cdp.CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig, 
-#                fileName, min_read_size, max_read_size, min_read_no, onscreen,
-#                pub) 
-
-
-def CDP_split(seq_file_1, seq_file_2, ref_file, nt, 
+def CDP_split(seq_file_list_1, seq_file_list_2, ref_file, nt, 
     fileFig=False, fileName = 'plot.pdf', 
     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False,
-    pub=False):
+    pub=False, processes=4):
 
     """
     Plots alignment count for each sRNA in ref file as (x,y)
@@ -231,58 +131,44 @@ def CDP_split(seq_file_1, seq_file_2, ref_file, nt,
     """  
 
     seq_1=SRNA_Seq()
-    seq_1.load_seq_file_arg_list(seq_file_1, max_read_size, min_read_no, 
+    if len(seq_file_list_1)==1:
+        seq_1.load_seq_file(seq_file_list_1[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq_1.load_seq_file_arg_list(seq_file_list_1, max_read_size, min_read_no, 
         min_read_size)
 
     seq_2=SRNA_Seq()
-    seq_2.load_seq_file_arg_list(seq_file_2, max_read_size, min_read_no, 
+    if len(seq_file_list_2)==1:
+        seq_2.load_seq_file(seq_file_list_2[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq_2.load_seq_file_arg_list(seq_file_list_2, max_read_size, min_read_no, 
         min_read_size)   
     
     
-    seq_name_1 = ah.single_file_output(seq_file_1[0])
-    if len(seq_file_1)>1:
-        for i in range(len(seq_file_1)):
+    seq_name_1 = ah.single_file_output(seq_file_list_1[0])
+    if len(seq_file_list_1)>1:
+        for i in range(len(seq_file_list_1)):
             if i == 0:
                 pass
             else:
-                seq_name_1+= "_{0}".format(ah.single_file_output(seq_file_1[i]))
+                seq_name_1+= "_{0}".format(ah.single_file_output(seq_file_list_1[i]))
     
-    seq_name_2 = ah.single_file_output(seq_file_2[0])
-    if len(seq_file_2)>1:
-        for i in range(len(seq_file_2)):
+    seq_name_2 = ah.single_file_output(seq_file_list_2[0])
+    if len(seq_file_list_2)>1:
+        for i in range(len(seq_file_list_2)):
             if i == 0:
                 pass
             else:
-                seq_name_2+= "_{0}".format(ah.single_file_output(seq_file_2[i]))
+                seq_name_2+= "_{0}".format(ah.single_file_output(seq_file_list_2[i]))
     
     cdp.CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, 
                      nt, fileFig, fileName,min_read_size, max_read_size, 
-                     min_read_no, onscreen, pub)
+                     min_read_no, onscreen, pub, processes)
 
 
-# def avCDP_split(seq_file_1, seq_file_2, seq_file_3, seq_file_4, ref_file, nt, 
-#     fileFig=False, fileName = 'plot.pdf', 
-#     min_read_size = 18, max_read_size = 32, min_read_no=1, onscreen = False, 
-#     pub=False):
-#  
-# 
-#     seq_1=SRNA_Seq()
-#     seq_1.load_av_seq_files(seq_file_1, seq_file_2, max_read_size, min_read_no, 
-#         min_read_size)
-# 
-#     seq_2=SRNA_Seq()
-#     seq_2.load_av_seq_files(seq_file_3, seq_file_4, max_read_size, min_read_no, 
-#         min_read_size)     
-#  
-#     seq_name_1 = ah.rep_file_output(seq_file_1, seq_file_2)
-#     seq_name_2 = ah.rep_file_output(seq_file_3, seq_file_4) 
-# 
-#     cdp.CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, 
-#                      nt, fileFig, fileName,min_read_size, max_read_size, 
-#                      min_read_no, onscreen, pub)    
-    
-
-def CDP_single_split(seq_file_1, ref_file, nt, 
+def CDP_single_split(seq_file_list_1, ref_file, nt, 
     min_read_size = 18, max_read_size = 32, min_read_no=1):
     """
     Normalised split alignments for a single reference - all recorded
@@ -295,10 +181,20 @@ def CDP_single_split(seq_file_1, ref_file, nt,
     refs = Ref_Seq()
     refs.load_ref_file(ref_file)
     seq_1=SRNA_Seq()
-    seq_1.load_seq_file(seq_file_1, 
-        max_read_size, min_read_no, min_read_size)
+    if len(seq_file_list_1)==1:
+        seq_1.load_seq_file(seq_file_list_1[0], max_read_size, min_read_no, 
+        min_read_size)
+    else:
+        seq_1.load_seq_file_arg_list(seq_file_list_1, max_read_size, min_read_no, 
+        min_read_size)
     
-    seq_name_1 = ah.single_file_output(seq_file_1)
+    seq_name_1 = ah.single_file_output(seq_file_list_1[0])
+    if len(seq_file_list_1)>1:
+        for i in range(len(seq_file_list_1)):
+            if i == 0:
+                pass
+            else:
+                seq_name_1+= "_{0}".format(ah.single_file_output(seq_file_list_1[i]))
 
     alignment_dict_1={} #header:aligned_sRNAs
 

@@ -9,33 +9,79 @@ import write_to_file as wtf
 import analysis_helper as ah
 import plot_reads as pr
 from dna import DNA
-
+from multiprocessing import Process, JoinableQueue, Manager
 #TODO: sort a no csv option
 def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig, 
                fileName, min_read_size, max_read_size, min_read_no, onscreen,
-               pub):
+               pub, cores):
 
     """
     Refactored CDP code shared between CDP and avCDP
     """
+    workers = cores
+    work_queue = JoinableQueue()
+    # done_queue = Queue()
+    processes = []
+    mgr=Manager()
+    count = 0
+    counts_by_ref=mgr.dict() #header:(count1, count2)
+
     refs=Ref_Seq()
     refs.load_ref_file(ref_file)
-    counts_by_ref = {} #header:(count1, count2)
+    for header,seq in refs:
+        work_queue.put((header,seq,)) 
+        count+=1
+        if count%10000==0:
+            for w in xrange(workers):
+                p = Process(target=worker, args=(work_queue, counts_by_ref, seq_1, seq_2,nt))
+                p.start()
+                processes.append(p)       
+
+            for p in processes:
+                p.join()
+    for w in xrange(workers):
+        p = Process(target=worker, args=(work_queue, counts_by_ref, seq_1, seq_2, nt))
+        p.start()
+        processes.append(p)       
+
+    for p in processes:
+        p.join()
     
-    for header, single_ref in refs:
-        single_alignment_1 = count_align_reads_to_seq(seq_1, 
-                                                            single_ref, nt)
-        single_alignment_2 = count_align_reads_to_seq(seq_2, 
-                                                            single_ref, nt)        
-        if single_alignment_1 != 0 or single_alignment_2 !=0:
-            counts_by_ref[header] = (single_alignment_1, single_alignment_2)
-  
-    CDP_output(counts_by_ref, fileFig, fileName, onscreen, seq_name_1, 
-               seq_name_2, ref_file, nt, pub)    
+    CDP_output(counts_by_ref.copy(), fileFig, fileName, onscreen, seq_name_1, 
+               seq_name_2, ref_file, nt, pub)   
+
+
+def worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
+    """
+    Worker process
+    """
+    try:
+        while not work_queue.empty():
+            both_aligned = CDP_single(work_queue.get(), seq_1, seq_2, nt)
+            if both_aligned is not None:
+                counts_by_ref[both_aligned[0]]=(both_aligned[1],both_aligned[2])
+            #work_queue.task_done()
+    except Exception, e:
+        print e
+    return True  
+
+
+def CDP_single(single_ref, seq_1, seq_2, nt):
+    """
+    Count for boths seqs aligned to single ref
+    """
+
+    single_alignment_1 = count_align_reads_to_seq(seq_1, 
+                                                        single_ref[1], nt)
+    single_alignment_2 = count_align_reads_to_seq(seq_2, 
+                                                        single_ref[1], nt)        
+    if single_alignment_1 != 0 or single_alignment_2 !=0:
+        return (single_ref[0], single_alignment_1, single_alignment_2,)
+
 
 def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, 
                      nt, fileFig, fileName,min_read_size, max_read_size, 
-                     min_read_no, onscreen, pub): 
+                     min_read_no, onscreen, pub, processes): 
     """
     Refactored CDP code shared between CDP_split and avCDP_split
     """

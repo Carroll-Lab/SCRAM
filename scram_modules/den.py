@@ -12,7 +12,7 @@ import numpy
 import write_to_file as wtf
 import post_process as pp
 import plot_reads as pr
-
+from multiprocessing import Process, JoinableQueue, Manager
 
 def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig, 
                  fileName, min_read_size, max_read_size, min_read_no, 
@@ -87,34 +87,39 @@ def combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize,
     Helper function - Align reads of 21,22 and 24 nt to a single reference 
     sequence
     """
-    single_alignment_21 = Align_sRNA()
-    single_alignment_21.align_reads_to_seq(seq, single_ref, 21)
-    single_alignment_22 = Align_sRNA()    
-    single_alignment_22.align_reads_to_seq(seq, single_ref, 22)
-    single_alignment_24 = Align_sRNA()        
-    single_alignment_24.align_reads_to_seq(seq, single_ref, 24)
-    if split is False:
-        single_alignment_21.split()
-        single_alignment_22.split()
-        single_alignment_24.split()
-    print '\n21nt sRNAs:'
-    single_sorted_alignemts_21 = single_alignment_21.aln_by_ref_pos()
-    print '\n22nt sRNAs:'
-    single_sorted_alignemts_22 = single_alignment_22.aln_by_ref_pos()
-    print '\n24nt sRNAs:'
-    single_sorted_alignemts_24 = single_alignment_24.aln_by_ref_pos()
-    if no_csv:
-        wtf.mnt_csv_output(single_alignment_21, single_alignment_22,
-                                 single_alignment_24,
-                                 seq_output,
-                                 ref_output) 
+    sRNA_lens = [21,22,24]
+    work_queue = JoinableQueue()
+    processes = []
+
+    mgr=Manager()
+    alignments_dict=mgr.dict()
+    
+    for x in sRNA_lens:
+        work_queue.put(x)
+    for w in xrange(3):
+        p = Process(target=worker, args=(work_queue, seq, single_ref, split, alignments_dict))
+        p.start()
+        processes.append(p)
+    
+    for p in processes:
+        p.join()    
+    
+
+    single_sorted_alignemts_21=alignments_dict[21]
+
+    single_sorted_alignemts_22=alignments_dict[22]
+
+    single_sorted_alignemts_24=alignments_dict[24]
+
+    
+
     if fileFig or onscreen:
     
-        graph_processed_21 = pp.fill_in_zeros(single_sorted_alignemts_21, 
+        graph_processed_21 = pp.fill_in_zeros(alignments_dict[21], 
             len(single_ref),21)
-        graph_processed_22 = pp.fill_in_zeros(single_sorted_alignemts_22, 
+        graph_processed_22 = pp.fill_in_zeros(alignments_dict[22], 
             len(single_ref),22)
-        graph_processed_24 = pp.fill_in_zeros(single_sorted_alignemts_24, 
+        graph_processed_24 = pp.fill_in_zeros(alignments_dict[24], 
             len(single_ref),24)
     
         x_ref = graph_processed_21[0]
@@ -137,6 +142,25 @@ def combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize,
         pr.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
         y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, 
         y_rvs_smoothed_24, fileFig, fileName, onscreen, ref_output, y_lim, pub)
+
+
+def worker(work_queue, seq, single_ref, split, alignments_dict):
+
+
+    try:
+        while not work_queue.empty():
+            single_alignment = Align_sRNA()
+            sRNA_len = work_queue.get()
+            single_alignment.align_reads_to_seq(seq, single_ref, sRNA_len)
+
+            if split is False:
+                single_alignment.split()
+
+            single_sorted_alignemts = single_alignment.aln_by_ref_pos()
+            alignments_dict[sRNA_len] = single_sorted_alignemts
+    except Exception, e:
+        print e
+    return True 
 
 
      

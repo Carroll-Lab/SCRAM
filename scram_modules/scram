@@ -124,7 +124,9 @@ USAGE
                             default=False, 
                             help='Remove all labels from density maps for \
                             publication')
-
+        parser.add_argument('-p', '--processes',
+                            type = int, help = 'No. of processes (threads) for CDP', 
+                            default = 4)
         parser.add_argument('-V', '--version', 
                             action='version', version=program_version_message)
         # Process arguments
@@ -145,7 +147,7 @@ USAGE
         no_display=args.no_display
         split = args.split_reads
         pub = args.publish
-
+        processes = args.processes
         #plot figure or not
         if ana not in ana_accepted:
             print "\nEXITING!\n\n{0} is not a recognized analysis type.\n"\
@@ -199,7 +201,8 @@ USAGE
                                    min_read, 
                                    max_read, 
                                    min_count, 
-                                   no_display)
+                                   no_display,
+                                   processes)
             else:
                 analysis.CDP(seq1, 
                              seq2, 
@@ -210,7 +213,8 @@ USAGE
                              min_read, 
                              max_read, 
                              min_count, 
-                             no_display)
+                             no_display,
+                             processes)
         elif ana =='sCDP':
             analysis.CDP_single_split(seq1, 
                                       ref, 
