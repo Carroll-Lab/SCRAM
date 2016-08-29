@@ -1,4 +1,6 @@
-'''
+'''CDP analysis class - for calculation of reads aligning to a reference
+sequence as (x,y) coordinates for two sets of sequence files
+
 Created on 25 Feb 2016
 
 @author: steve
@@ -13,7 +15,7 @@ from multiprocessing import Process, JoinableQueue, Manager
 #TODO: sort a no csv option
 def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig, 
                fileName, min_read_size, max_read_size, min_read_no, onscreen,
-               pub, cores):
+               no_csv, pub, cores):
 
     """
     Refactored CDP code shared between CDP and avCDP
@@ -33,34 +35,43 @@ def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig,
         count+=1
         if count%10000==0:
             for w in xrange(workers):
-                p = Process(target=worker, args=(work_queue, counts_by_ref, seq_1, seq_2,nt))
+                p = Process(target=CDP_worker, args=(work_queue, counts_by_ref, 
+                                                     seq_1, 
+                                                     seq_2,
+                                                     nt))
                 p.start()
                 processes.append(p)       
 
             for p in processes:
                 p.join()
     for w in xrange(workers):
-        p = Process(target=worker, args=(work_queue, counts_by_ref, seq_1, seq_2, nt))
+        p = Process(target=CDP_worker, args=(work_queue, counts_by_ref, 
+                                             seq_1, 
+                                             seq_2, 
+                                             nt))
         p.start()
         processes.append(p)       
 
     for p in processes:
         p.join()
-    
-    CDP_output(counts_by_ref.copy(), fileFig, fileName, onscreen, seq_name_1, 
+    if len(counts_by_ref)==0: 
+        print "\nNo reads aligned to any reference sequence. \
+        Output files not generated\n"
+    else:
+        CDP_output(counts_by_ref.copy(), fileFig, fileName, onscreen, no_csv, seq_name_1, 
                seq_name_2, ref_file, nt, pub)   
 
 
-def worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
+def CDP_worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
     """
-    Worker process
+    Worker process - get ref from work queue, aligns reads from seq_1 and seq_2,
+    and adds as (x,y) coords to counts_by_ref if there are alignments.  
     """
     try:
         while not work_queue.empty():
             both_aligned = CDP_single(work_queue.get(), seq_1, seq_2, nt)
             if both_aligned is not None:
                 counts_by_ref[both_aligned[0]]=(both_aligned[1],both_aligned[2])
-            #work_queue.task_done()
     except Exception, e:
         print e
     return True  
@@ -81,27 +92,58 @@ def CDP_single(single_ref, seq_1, seq_2, nt):
 
 def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, 
                      nt, fileFig, fileName,min_read_size, max_read_size, 
-                     min_read_no, onscreen, pub, processes): 
+                     min_read_no, onscreen, no_csv, pub, cores): 
     """
     Refactored CDP code shared between CDP_split and avCDP_split
     """
        
+    workers = cores
+    work_queue = JoinableQueue()
+    processes = []
+    mgr=Manager()
+    count = 0
+    
     refs=Ref_Seq()
     refs.load_ref_file(ref_file)
     
-    alignment_dict_1={} #header:aligned_sRNAs
-    alignment_dict_2={}
+    alignment_dict_1=mgr.dict() #header:aligned_sRNAs
+    alignment_dict_2=mgr.dict()
     
-    #calc aligned sRNAs for each header, duplicate if necessary
-    for header, single_ref in refs:
-        aligned_reads_1 = dict_align_reads_to_seq_split(seq_1, single_ref, nt)
-        aligned_reads_2 = dict_align_reads_to_seq_split(seq_2, single_ref, nt)        
-    #makes a nested dictionary    
-        if len(aligned_reads_1) !=0: #FIX
-            alignment_dict_1[header] = aligned_reads_1
-        if len(aligned_reads_2) !=0: #FIX
-            alignment_dict_2[header] = aligned_reads_2        
-    
+ 
+    for header,seq in refs:
+        work_queue.put((header,seq,)) 
+        count+=1
+        if count%10000==0:
+            for w in xrange(workers):
+                p = Process(target=split_CDP_worker, 
+                            args=(work_queue, 
+                                  alignment_dict_1, 
+                                  alignment_dict_2, 
+                                  seq_1, 
+                                  seq_2,
+                                  nt))
+                p.start()
+                processes.append(p)       
+
+            for p in processes:
+                p.join()
+    for w in xrange(workers):
+        p = Process(target=split_CDP_worker, 
+                    args=(work_queue, 
+                          alignment_dict_1, 
+                          alignment_dict_2, 
+                          seq_1, 
+                          seq_2, 
+                          nt))
+        p.start()
+        processes.append(p)       
+
+    for p in processes:
+        p.join()
+       
+    alignment_dict_1=alignment_dict_1.copy()
+    alignment_dict_2=alignment_dict_2.copy()     
+
     times_align_1=times_read_aligns(alignment_dict_1)
     times_align_2=times_read_aligns(alignment_dict_2)
     
@@ -116,11 +158,33 @@ def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
     counts_by_ref = header_x_y_counts(header_split_count_1, 
                                           header_split_count_2, 
                                           refs)  
-
-    CDP_output(counts_by_ref, fileFig, fileName, onscreen, seq_name_1, 
+    if len(counts_by_ref)==0: 
+        print "\nNo reads aligned to any reference sequence. \
+        Output files not generated\n"
+    else:
+        CDP_output(counts_by_ref, fileFig, fileName, onscreen, no_csv, seq_name_1, 
                seq_name_2, ref_file, nt, pub)
     
 
+def split_CDP_worker(work_queue, alignment_dict_1, alignment_dict_2, seq_1, 
+                     seq_2, nt):
+    #calc aligned sRNAs for each header, duplicate if necessary
+    
+    try:
+        while not work_queue.empty():
+            single_ref=work_queue.get()
+            aligned_reads_1 = dict_align_reads_to_seq_split(seq_1, 
+                                                            single_ref[1], nt)
+            aligned_reads_2 = dict_align_reads_to_seq_split(seq_2, 
+                                                            single_ref[1], nt)
+            if len(aligned_reads_1) !=0: #FIX
+                alignment_dict_1[single_ref[0]] = aligned_reads_1
+            if len(aligned_reads_2) !=0: #FIX
+                alignment_dict_2[single_ref[0]] = aligned_reads_2
+    except Exception, e:
+        print e
+    return True    
+    
 
 def count_align_reads_to_seq(seq_dict, ref, sRNA_length):
     """
@@ -204,8 +268,7 @@ def dict_align_reads_to_seq_split(seq_dict, ref, sRNA_length):
 
 def times_read_aligns(split_alignment_dict):
     """
-    Dict. of times a read aligns:
-    To all references????
+    Dict. of times a read aligns to all references
     {read: times aligned} 
     """
        
@@ -257,7 +320,7 @@ def header_x_y_counts(header_split_count_1, header_split_count_2, refs):
     return counts_by_ref 
 
 
-def CDP_output(counts_by_ref, fileFig, fileName, onscreen, seq_name_1, 
+def CDP_output(counts_by_ref, fileFig, fileName, onscreen, no_csv, seq_name_1, 
                seq_name_2, ref_file, nt, pub):
     """
     Organise csv or pdf output for CDP analysis
@@ -279,13 +342,15 @@ def CDP_output(counts_by_ref, fileFig, fileName, onscreen, seq_name_1,
                             fileFig,
                             fileName,
                             pub)
-    out_csv_name = ah.cdp_file_output(seq_name_1, 
-                                       seq_name_2, 
-                                       ref_name,
-                                       nt, 
-                                       "csv")
     
-    wtf.cdp_output(counts_by_ref, 
-                             seq_name_1, 
-                             seq_name_2,
-                             out_csv_name) 
+    if no_csv:
+        out_csv_name = ah.cdp_file_output(seq_name_1, 
+                                           seq_name_2, 
+                                           ref_name,
+                                           nt, 
+                                           "csv")
+        
+        wtf.cdp_output(counts_by_ref, 
+                                 seq_name_1, 
+                                 seq_name_2,
+                                 out_csv_name) 

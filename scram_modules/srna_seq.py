@@ -1,4 +1,9 @@
 '''
+Small RNA storage class
+
+Stores unique sequence and read count in an internal dictionary.  
+Automatic normalisation to RPMR once loaded from file
+
 Created on 1 Apr 2016
 
 @author: steve
@@ -35,7 +40,7 @@ class SRNA_Seq(object):
     def load_seq_file(self, seq_file, sRNA_max_len_cutoff, min_reads, \
         sRNA_min_len_cutoff):
         """
-        load 1 seq dict in .fasta format.
+        load 1 sequence file in .fasta format.
     
         Calculate RPMR and apply in the function
     
@@ -43,39 +48,40 @@ class SRNA_Seq(object):
         accepted (including for RPMR calculation)
         min_reads --> only reads >= min_reads accepted
     
-        produce seq_dict --> sRNA:RPMR
+        produce SRNA-Seq object --> sRNA:RPMR
         """
         start = time.clock()
 
-        read_count_1 = 0
-        loaded_seq_1 = open(seq_file, 'rU')
+        read_count = 0
+        loaded_seq = open(seq_file, 'rU')
     
-        # Complete dict for seq_1
-        for line in loaded_seq_1:
+        for line in loaded_seq:
             if line[0] == '>':
                 count = int(line.strip().split('-')[1])
-                next_line = True #ensure that the nextline has the correct seq.
-            elif count >= min_reads and len(line.strip()) <= sRNA_max_len_cutoff \
-            and len(line.strip()) >= sRNA_min_len_cutoff and next_line == True:
+                next_line = True 
+            elif check_sRNA_allowed(count, len(line.strip()), 
+                                    sRNA_min_len_cutoff, 
+                                    sRNA_max_len_cutoff, 
+                                    min_reads) and next_line:
                 self._internal_dict[DNA(line.strip())] = count
-                read_count_1 += count
-                next_line = False
+                read_count += count
+                next_line = False                
             else:
                 pass
     
-        loaded_seq_1.close()
+        loaded_seq.close()
 
         # final RPMR - could simplify in future
         for sRNA, count in self._internal_dict.iteritems():
-            self._internal_dict[sRNA] = count * (float(1000000) / read_count_1)
+            self._internal_dict[sRNA] = count * (float(1000000) / read_count)
         print "\nSequence file loading time = "\
          + str((time.clock() - start)) + " seconds\n"
         print "{0} has {1} loaded reads\n".format(seq_file.split('/')[-1],
-                                                  read_count_1)
+                                                  read_count)
         print "-"*50
 
-    def load_seq_file_arg_list(self, seq_file_arg_list, sRNA_max_len_cutoff, min_reads, \
-        sRNA_min_len_cutoff):
+    def load_seq_file_arg_list(self, seq_file_arg_list, sRNA_max_len_cutoff, 
+                               min_reads, sRNA_min_len_cutoff):
         """
         load seq dict from arg_list in fasta format.
     
@@ -99,16 +105,17 @@ class SRNA_Seq(object):
 
             loaded_seq = open(seq_file, 'rU')
         
-            # Complete dict for seq_1
             for line in loaded_seq:
                 if line[0] == '>':
                     count = int(line.strip().split('-')[1])
-                    next_line = True #ensure that the nextline has the correct seq.
-                elif count >= min_reads and len(line.strip()) <= sRNA_max_len_cutoff \
-                and len(line.strip()) >= sRNA_min_len_cutoff and next_line == True:
+                    next_line = True 
+                elif check_sRNA_allowed(count, len(line.strip()), 
+                                        sRNA_min_len_cutoff, 
+                                        sRNA_max_len_cutoff, 
+                                        min_reads) and next_line:
                     seq_dict[DNA(line.strip())] = count
                     read_count += count
-                    next_line = False
+                    next_line = False                
                 else:
                     pass
         
@@ -129,3 +136,13 @@ class SRNA_Seq(object):
         print "\nSequence file loading time = "\
          + str((time.clock() - start)) + " seconds\n"
         print "-"*50
+
+def check_sRNA_allowed(count, length, sRNA_min_len_cutoff, sRNA_max_len_cutoff, 
+                       min_reads):
+    """
+    Return True if sRNA is between min and max length, and above min count 
+    """
+    if count >= min_reads and length <= sRNA_max_len_cutoff \
+                and length >= sRNA_min_len_cutoff:
+        return True
+    return False

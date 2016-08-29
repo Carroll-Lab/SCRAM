@@ -78,7 +78,7 @@ USAGE
                                 formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('analysis_type', type = str, help = "den \
         (single read length), mnt3dm (21, 22 and 24nt read lengths), \
-        CDP (single read length), sCDP (single multi-seq alignment")
+        CDP (single read length)")
         parser.add_argument('reference_file', 
                             type = str, help = "Reference file (.fasta format)")     
         parser.add_argument('-s1', '--seq_file_1', 
@@ -202,6 +202,8 @@ USAGE
                                    max_read, 
                                    min_count, 
                                    no_display,
+                                   no_csv,
+                                   pub,
                                    processes)
             else:
                 analysis.CDP(seq1, 
@@ -214,14 +216,10 @@ USAGE
                              max_read, 
                              min_count, 
                              no_display,
+                             no_csv,
+                             pub,
                              processes)
-        elif ana =='sCDP':
-            analysis.CDP_single_split(seq1, 
-                                      ref, 
-                                      nt, 
-                                      min_read, 
-                                      max_read, 
-                                      min_count)
+
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
