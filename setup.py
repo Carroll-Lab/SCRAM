@@ -6,7 +6,7 @@ Created on 27 May 2016
 from setuptools import setup
 
 setup(name='scram',
-      version='0.5',
+      version='0.5.0',
       description=' Small Complementary RnA Mapper',
       url='https://github.com/Carroll-Lab/scram',
       author='Stephen Fletcher',
