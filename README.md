@@ -45,24 +45,17 @@ ___
 Analysis types
 
 * **den** : align reads of a single sRNA class (eg. 21 nt) from a single sequence file to a single reference sequence (-s1 and -nt required)
-* **denAv** : align reads of a single sRNA class (eg. 21 nt) to a single reference. Reads are the average from 2 replicate sequence files (-s1, -s2 and -nt required)
 * **mnt3dm** : align 21, 22 and 24 nt reads from a single sequence file to a single reference sequence (-s1 required)
-* **multiDen** : align reads of a single sRNA class (eg. 21 nt) from a multiple sequence files to multiple reference sequences (-seq_list required)
-* **multiDen** : align reads of a single sRNA class (eg. 21 nt) from a multiple replicate sequence files to multiple reference sequences (-seq_list required)
 * **CDP** : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Counts for two sequence files are plotted as (x,y) coordinates for each reference (-s1, -s2 and -nt required)
-* **avCDP** : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Counts for two replicate sequence files are plotted as (x,y) coordinates for each reference (-s1, -s2, -s3, -s4and -nt required)
-* **sCDP** : count aligned reads of a single sRNA class (eg. 21 nt) to multiple reference sequences. Single sequence file required. CSV output only. (-s1 and -nt required)
 
 Flags
 
 * **-h** : Help message
-* **-s1** : Sequence file 1
-* **-s2** : Sequence file 2
-* **-s3** : Sequence file 3
-* **-s4** : Sequence file 4
+* **-s1** : Sequence file/s 1 (if more than 1 file, read count is averaged for each read (if present in all files)
+* **-s2** : Sequence file/s 2 (if more than 1 file, read count is averaged for each read (if present in all files)
 * **-nt** : sRNA length to analyse
 * **-f** : Figure output file name (if not auto-generated)
-* **-seq_list** : Text (.txt) file with full path of sequence file on each line (single replicate) or two tab-delimited sequence file paths per line (two replicates)
+* **-p** : No of cores (processors) to use (default=4)
 * **-min_read** : Minimum length of sRNA reads used for normalisation (default=18)
 * **-max_read** : Maximum length of sRNA reads used for normalisation (default=32)
 * **-min_count** : Minimum read count for an sRNA to be aligned and used for normalisation (default=1)
