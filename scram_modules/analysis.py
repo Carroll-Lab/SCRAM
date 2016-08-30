@@ -12,6 +12,7 @@ import write_to_file
 import cdp
 import analysis_helper as ah
 import den as dn
+from termcolor import colored
 
 
 def single_ref_coverage(seq_file_list, ref_file, nt, smoothWinSize=50, 
@@ -22,7 +23,7 @@ def single_ref_coverage(seq_file_list, ref_file, nt, smoothWinSize=50,
     Aligns reads from a single read file to a single reference sequence for
     a single sRNA size.
     """
-
+    print colored("-----------------LOADING SEQUENCES----------------",'green')
     seq=SRNA_Seq()
     if len(seq_file_list)==1:
         seq.load_seq_file(seq_file_list[0], max_read_size, min_read_no, 
@@ -50,7 +51,7 @@ def single_ref_coverage_21_22_24(seq_file_list, ref_file, smoothWinSize=50,
     """
     Align reads from a single seq file to a single reference for 21,22 and 24nt
     """
-
+    print colored("-----------------LOADING SEQUENCES----------------",'green')
     seq=SRNA_Seq()
     if len(seq_file_list)==1:
         seq.load_seq_file(seq_file_list[0], max_read_size, min_read_no, 
@@ -79,7 +80,7 @@ def CDP(seq_file_list_1, seq_file_list_2, ref_file, nt,
     Plots alignment count for each sRNA in ref file as (x,y)
     for 2 seq files.  No splitting of read count
     """  
-
+    print colored("-----------------LOADING SEQUENCES----------------",'green')
     seq_1=SRNA_Seq()
     if len(seq_file_list_1)==1:
         seq_1.load_seq_file(seq_file_list_1[0], max_read_size, min_read_no, 
@@ -129,7 +130,7 @@ def CDP_split(seq_file_list_1, seq_file_list_2, ref_file, nt,
     for 2 seq files.  Read count split by number of times an sRNA aligns
       
     """  
-
+    print colored("-----------------LOADING SEQUENCES----------------",'green')
     seq_1=SRNA_Seq()
     if len(seq_file_list_1)==1:
         seq_1.load_seq_file(seq_file_list_1[0], max_read_size, min_read_no, 

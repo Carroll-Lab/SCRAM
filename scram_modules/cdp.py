@@ -5,7 +5,7 @@ Created on 25 Feb 2016
 
 @author: steve
 '''
-
+from termcolor import colored
 from ref_seq import Ref_Seq
 import write_to_file as wtf
 import analysis_helper as ah
@@ -27,9 +27,9 @@ def CDP_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt,fileFig,
     mgr=Manager()
     count = 0
     counts_by_ref=mgr.dict() #header:(count1, count2)
-
     refs=Ref_Seq()
     refs.load_ref_file(ref_file)
+    print colored("------------------ALIGNING READS------------------\n",'green')
     for header,seq in refs:
         work_queue.put((header,seq,)) 
         count+=1
@@ -109,7 +109,7 @@ def CDP_split_shared(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
     alignment_dict_1=mgr.dict() #header:aligned_sRNAs
     alignment_dict_2=mgr.dict()
     
- 
+    print colored("------------------ALIGNING READS------------------\n",'green') 
     for header,seq in refs:
         work_queue.put((header,seq,)) 
         count+=1

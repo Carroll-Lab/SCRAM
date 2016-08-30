@@ -6,7 +6,7 @@ Created on 27 May 2016
 from setuptools import setup
 
 setup(name='scram',
-      version='0.5.0',
+      version='0.5.1',
       description=' Small Complementary RnA Mapper',
       url='https://github.com/Carroll-Lab/scram',
       author='Stephen Fletcher',
@@ -30,7 +30,7 @@ setup(name='scram',
     # Specify the Python versions you support here. In particular, ensure
     # that you indicate whether you support Python 2, Python 3 or both.
     'Programming Language :: Python :: 2.7'],
-      install_requires=['numpy','matplotlib'],
+      install_requires=['numpy','matplotlib','termcolor'],
       scripts=['scram_modules/scram',
       'scram_modules/analysis.py',
       'scram_modules/align_srna.py',

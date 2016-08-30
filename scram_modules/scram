@@ -17,8 +17,9 @@ Command line module
 @deffield    updated: Updated
 '''
 
+
+from termcolor import colored
 import sys 
-#import os
 import analysis
 
 from argparse import ArgumentParser
@@ -29,20 +30,6 @@ __all__ = []
 __version__ = 0.51
 __date__ = '2016-08-30'
 __updated__ = '2016-08-30'
-
-# DEBUG = 1
-# TESTRUN = 0
-# PROFILE = 0
-
-class CLIError(Exception):
-    '''Generic exception to raise and log different fatal errors.'''
-    def __init__(self, msg):
-        super(CLIError).__init__(type(self))
-        self.msg = "E: %s" % msg
-    def __str__(self):
-        return self.msg
-    def __unicode__(self):
-        return self.msg
 
 def main(argv=None): 
     '''Command line options.'''
@@ -108,7 +95,7 @@ USAGE
                             analysed (default=1)", 
                             default = 1)        
         parser.add_argument('-win', '--smooth_win_size', type = int, 
-                            help = "Window size for smoothing (default=50)/ \
+                            help = "Window size for smoothing (default=50). \
                             Must be above 5, or non-smoothed plot returned", 
                             default = 50)
         parser.add_argument('-ylim', '--ylim',
@@ -227,4 +214,11 @@ USAGE
 
 
 if __name__ == "__main__":
+    print "\n"
+    print colored(" ___   ___  ____    __    __  __ ",'red')
+    print colored("/ __) / __)(  _ \  /__\  (  \/  )",'red')
+    print colored("\__ \( (__  )   / /(__)\  )    ( ",'red')
+    print colored("(___/ \___)(_)\_)(__)(__)(_/\/\_)",'red')
+    print "\n"
+    
     main()

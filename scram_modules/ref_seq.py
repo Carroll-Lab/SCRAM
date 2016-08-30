@@ -10,6 +10,7 @@ A class for reference sequences  - stores header:seq pairs in a dictionary
 """
 import time
 from dna import DNA
+from termcolor import colored
 
 class Ref_Seq(object):
     def __init__(self):
@@ -40,6 +41,7 @@ class Ref_Seq(object):
     
         Product ref_dict --> header:sequence
         """
+        print colored("\n-----------------LOADING REFERENCE----------------",'green')
         start = time.clock()
         #ref_dict = {}
         ref_count = 0
@@ -76,4 +78,3 @@ class Ref_Seq(object):
                                              len(full_len_seq))
         print "\nReference sequence loading time = "\
          + str((time.clock() - start)) + " seconds\n"
-        print "-"*50

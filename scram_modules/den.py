@@ -5,7 +5,7 @@ Created on 31 Mar 2016
 '''
 from ref_seq import Ref_Seq
 import time
-# import align
+from termcolor import colored
 from align_srna import Align_sRNA
 import analysis_helper as ah
 import numpy
@@ -32,6 +32,7 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
     for header in ref.headers():
         single_ref=ref[header]
     start = time.clock()
+    print colored("------------------ALIGNING READS------------------\n",'green') 
     single_alignment = Align_sRNA()
     single_alignment.align_reads_to_seq(seq, single_ref, nt)
     if split is False:
@@ -51,8 +52,6 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
             smoothWinSize, window='blackman')
         y_rvs_smoothed = pp.smooth(numpy.array(graph_processed[2]), 
             smoothWinSize, window='blackman')
-        print "\n{0} nt alignment time time = {1} seconds\n"\
-            .format(nt, str((time.clock() - start)))
         
         if fileName == "auto":
             fileName = ah.ref_seq_nt_output(seq_output, ref_output, nt, "pdf")
@@ -69,10 +68,11 @@ def coverage_21_22_24(seq, seq_output, ref_file, smoothWinSize,
     ref = Ref_Seq()
     ref.load_ref_file(ref_file)
     if len(ref)>1:
-        print "\nMultiple reference sequences in file. Use multiDen instead.\n"
+        print "\nMultiple reference sequences in file.\n"
         return 
     ref_output = ah.single_file_output(ref_file)
     #this is a hack
+    print colored("------------------ALIGNING READS------------------\n",'green')     
     for header in ref.headers():
         single_ref=ref[header]    
     combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize, 
