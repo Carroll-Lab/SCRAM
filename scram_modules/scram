@@ -26,9 +26,9 @@ from argparse import RawDescriptionHelpFormatter
 from sets import Set
 
 __all__ = []
-__version__ = 0.5
-__date__ = '2016-08-24'
-__updated__ = '2016-08-24'
+__version__ = 0.51
+__date__ = '2016-08-30'
+__updated__ = '2016-08-30'
 
 # DEBUG = 1
 # TESTRUN = 0
@@ -91,6 +91,9 @@ USAGE
                             type=str, default = "NO_PLOT", 
                             help= "Figure output file name.  'auto' \
                             will auto-generate a file name") 
+        parser.add_argument('-p', '--processes',
+                            type = int, help = 'No. of processes (CPU cores) for CDP', 
+                            default = 4)
         parser.add_argument('-min_read', 
                             '--min_read_size', type = int, 
                             help = "Minimum length of sRNA reads analysed \
@@ -105,7 +108,8 @@ USAGE
                             analysed (default=1)", 
                             default = 1)        
         parser.add_argument('-win', '--smooth_win_size', type = int, 
-                            help = "Window size for smoothing (default=50)", 
+                            help = "Window size for smoothing (default=50)/ \
+                            Must be above 5, or non-smoothed plot returned", 
                             default = 50)
         parser.add_argument('-ylim', '--ylim',
                             type = float, help = '+/- y axis limit', 
@@ -124,9 +128,6 @@ USAGE
                             default=False, 
                             help='Remove all labels from density maps for \
                             publication')
-        parser.add_argument('-p', '--processes',
-                            type = int, help = 'No. of processes (threads) for CDP', 
-                            default = 4)
         parser.add_argument('-V', '--version', 
                             action='version', version=program_version_message)
         # Process arguments

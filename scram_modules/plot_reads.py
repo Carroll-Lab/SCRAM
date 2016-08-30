@@ -140,7 +140,7 @@ def cdp_plot(counts_by_ref, seq1, seq2, nt, onscreen, fileFig, fileName, pub):
             labelsize=15) # labels along the bottom edge are off
         clear_frame() 
     else:
-        plt.legend(loc='upper left',borderaxespad=0)
+        plt.legend(loc='upper left',fancybox=True, framealpha=0.5)
         xlabel(seq1)
         ylabel(seq2)
     fig1 = plt.gcf()

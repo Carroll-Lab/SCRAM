@@ -49,19 +49,19 @@ def cdp_output(counts_by_ref, header1, header2, out_file):
 
     csvfile.close()
 
-def cdp_single_output(counts_by_ref, header1, nt):
-    out_file = "{0}_{1}nt.csv".format(header1, nt)
-    results_list=[]
-    for header, counts in counts_by_ref.iteritems():
-        results_list.append((header, counts))
-    with open(out_file, 'wb') as csvfile:
-        mycsv = csv.writer(csvfile, delimiter=',')
-        mycsv.writerow(['',header1])
-        for result in results_list:
-            out=[result[0],result[1]]
-            mycsv.writerow(out)
-
-    csvfile.close()
+# def cdp_single_output(counts_by_ref, header1, nt):
+#     out_file = "{0}_{1}nt.csv".format(header1, nt)
+#     results_list=[]
+#     for header, counts in counts_by_ref.iteritems():
+#         results_list.append((header, counts))
+#     with open(out_file, 'wb') as csvfile:
+#         mycsv = csv.writer(csvfile, delimiter=',')
+#         mycsv.writerow(['',header1])
+#         for result in results_list:
+#             out=[result[0],result[1]]
+#             mycsv.writerow(out)
+# 
+#     csvfile.close()
 
 
 

@@ -120,7 +120,7 @@ def smooth(x,window_len,window='hamming'):
         raise ValueError, "Input vector needs to be bigger than window size."
 
 
-    if window_len<3:
+    if window_len<6:
         return x
 
 

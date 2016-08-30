@@ -25,7 +25,7 @@ def ref_coverage(seq, seq_output, ref_file, nt, smoothWinSize, fileFig,
     ref.load_ref_file(ref_file)
     
     if len(ref)>1:
-        print "\nMultiple reference sequences in file. Use multiDen instead.\n"
+        print "\nMultiple reference sequences in file.\n"
         return 
     ref_output = ah.single_file_output(ref_file)
     #this is a hack    
@@ -90,14 +90,17 @@ def combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize,
     sRNA_lens = [21,22,24]
     work_queue = JoinableQueue()
     processes = []
-
     mgr=Manager()
     alignments_dict=mgr.dict()
-    
+
+    non_srt_alignments_dict=mgr.dict() #for csv only
     for x in sRNA_lens:
         work_queue.put(x)
     for w in xrange(3):
-        p = Process(target=worker, args=(work_queue, seq, single_ref, split, alignments_dict))
+        p = Process(target=worker, args=(work_queue, seq, single_ref, split, 
+                                         alignments_dict, 
+                                         non_srt_alignments_dict, 
+                                         no_csv))
         p.start()
         processes.append(p)
     
@@ -142,9 +145,16 @@ def combined_21_22_24(seq, seq_output, ref_output, single_ref, smoothWinSize,
         pr.den_multi_plot_3(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21,
         y_fwd_smoothed_22, y_rvs_smoothed_22, y_fwd_smoothed_24, 
         y_rvs_smoothed_24, fileFig, fileName, onscreen, ref_output, y_lim, pub)
+    if no_csv:
+        wtf.mnt_csv_output(non_srt_alignments_dict[21], 
+                           non_srt_alignments_dict[22], 
+                           non_srt_alignments_dict[24],
+                           seq_output, 
+                           ref_output)
 
-
-def worker(work_queue, seq, single_ref, split, alignments_dict):
+def worker(work_queue, seq, single_ref, split, alignments_dict, 
+           non_srt_alignments_dict, 
+           no_csv):
 
 
     try:
@@ -155,7 +165,8 @@ def worker(work_queue, seq, single_ref, split, alignments_dict):
 
             if split is False:
                 single_alignment.split()
-
+            if no_csv:
+                non_srt_alignments_dict[sRNA_len]=single_alignment
             single_sorted_alignemts = single_alignment.aln_by_ref_pos()
             alignments_dict[sRNA_len] = single_sorted_alignemts
     except Exception, e:
