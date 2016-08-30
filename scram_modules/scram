@@ -215,10 +215,10 @@ USAGE
 
 if __name__ == "__main__":
     print "\n"
-    print colored(" ___   ___  ____    __    __  __ ",'red')
-    print colored("/ __) / __)(  _ \  /__\  (  \/  )",'red')
-    print colored("\__ \( (__  )   / /(__)\  )    ( ",'red')
-    print colored("(___/ \___)(_)\_)(__)(__)(_/\/\_)",'red')
+    print colored("         ___   ___  ____    __    __  __ ",'red')
+    print colored("        / __) / __)(  _ \  /__\  (  \/  )",'red')
+    print colored("        \__ \( (__  )   / /(__)\  )    ( ",'red')
+    print colored("        (___/ \___)(_)\_)(__)(__)(_/\/\_)",'red')
     print "\n"
     
     main()

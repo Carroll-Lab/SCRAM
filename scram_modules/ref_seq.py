@@ -71,7 +71,7 @@ class Ref_Seq(object):
     
         self._internal_dict.update({key: DNA(full_len_seq)})
     
-        print '\n ---- {0} reference sequences loaded for alignment ----'\
+        print '\n----{0} reference sequences loaded for alignment----'\
             .format(ref_count)
         if len(self._internal_dict) ==1:
             print "\n{0} length = {1} bp".format(ref_file.split('/')[-1],

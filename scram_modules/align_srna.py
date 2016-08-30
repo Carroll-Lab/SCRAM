@@ -37,7 +37,6 @@ class Align_sRNA(object):
         Returns {query seq: [position, count]} 
         """ 
         count_start = 0
-    # indv_seq_align_count = 0
 
         ref_complement = ref.complement()
     
