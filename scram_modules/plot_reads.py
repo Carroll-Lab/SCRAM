@@ -107,14 +107,15 @@ def cdp_plot(counts_by_ref, seq1, seq2, nt, onscreen, fileFig, fileName, pub):
     x-axis: seq1 reads aligned to reference
     y-axis: seq2 reads aligned to reference
     """
-    results_list=[]
+    results_list=[] #list of resutls
     for counts in counts_by_ref.itervalues():
         results_list.append((counts[0]+0.01, counts[1]+0.01))
- 
+        #hack that allows zero values to be plotted on a log scale
     results_list=sorted(results_list)
   
-    _max=max(results_list[-1][0], results_list[-1][1])+100
-     
+    _max=max(results_list[-1][0], results_list[-1][1]) #sets up max x and y scale values
+    _max+=float(_max/2)
+    
     plt.scatter(*zip(*results_list), 
                 s=10, 
                 color = nt_colour(nt) , 

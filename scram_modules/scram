@@ -27,7 +27,7 @@ from argparse import RawDescriptionHelpFormatter
 from sets import Set
 
 __all__ = []
-__version__ = 0.51
+__version__ = 0.55
 __date__ = '2016-08-30'
 __updated__ = '2016-08-30'
 
