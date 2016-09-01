@@ -148,65 +148,74 @@ USAGE
             fileFig=True        
  
         if ana == 'den':
-            analysis.single_ref_coverage(seq1, 
-                                         ref, 
-                                         nt, 
-                                         win, 
-                                         fileFig, 
-                                         f, 
-                                         min_read, 
-                                         max_read, 
-                                         min_count, 
-                                         no_display,
-                                         no_csv,
-                                         ylim, 
-                                         pub,
-                                         split) 
+            if seq1 is None or nt is None or ref is None: 
+                print "Exiting due to missing arguments: den requires reference, sequence (-s1) and sRNA length (-nt)\n"
+            else:
+                analysis.single_ref_coverage(seq1, 
+                                             ref, 
+                                             nt, 
+                                             win, 
+                                             fileFig, 
+                                             f, 
+                                             min_read, 
+                                             max_read, 
+                                             min_count, 
+                                             no_display,
+                                             no_csv,
+                                             ylim, 
+                                             pub,
+                                             split) 
  
         elif ana == 'mnt3dm':
-            analysis.single_ref_coverage_21_22_24(seq1, 
-                                                  ref, 
-                                                  win, 
-                                                  fileFig, 
-                                                  f, 
-                                                  min_read, 
-                                                  max_read, 
-                                                  min_count, 
-                                                  no_display,
-                                                  no_csv, 
-                                                  ylim, 
-                                                  pub,
-                                                  split)
+            if seq1 is None or ref is None: 
+                print "Exiting due to missing arguments: mnt3dm requires reference and sequence (-s1)\n"
+            else:
+                analysis.single_ref_coverage_21_22_24(seq1, 
+                                                      ref, 
+                                                      win, 
+                                                      fileFig, 
+                                                      f, 
+                                                      min_read, 
+                                                      max_read, 
+                                                      min_count, 
+                                                      no_display,
+                                                      no_csv, 
+                                                      ylim, 
+                                                      pub,
+                                                      split)
 
         elif ana =='CDP':
-            if split is False:
-                analysis.CDP_split(seq1, 
-                                   seq2, 
-                                   ref, 
-                                   nt, 
-                                   fileFig, 
-                                   f, 
-                                   min_read, 
-                                   max_read, 
-                                   min_count, 
-                                   no_display,
-                                   no_csv,
-                                   pub,
-                                   processes)
-            else:
-                analysis.CDP(seq1, 
-                             seq2, 
-                             ref, 
-                             nt, 
-                             fileFig, 
-                             f, 
-                             min_read, 
-                             max_read, 
-                             min_count, 
-                             no_display,
-                             no_csv,
-                             pub,
-                             processes)
+            if seq1 is None or ref is None: 
+                print "Exiting due to missing arguments: CDP requires reference, sequence 1 (-s1), sequence 2 (-s2) and sRNA length (-nt)\n"
+            else:           
+                if split is False:
+                    analysis.CDP_split(seq1, 
+                                       seq2, 
+                                       ref, 
+                                       nt, 
+                                       fileFig, 
+                                       f, 
+                                       min_read, 
+                                       max_read, 
+                                       min_count, 
+                                       no_display,
+                                       no_csv,
+                                       pub,
+                                       processes)
+                else:
+                    analysis.CDP(seq1, 
+                                 seq2, 
+                                 ref, 
+                                 nt, 
+                                 fileFig, 
+                                 f, 
+                                 min_read, 
+                                 max_read, 
+                                 min_count, 
+                                 no_display,
+                                 no_csv,
+                                 pub,
+                                 processes)
 
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
