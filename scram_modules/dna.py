@@ -13,7 +13,7 @@ class DNA(object):
         return self.sequence[key]
     
     def __hash__(self):
-        return hash((self.sequence))
+        return hash(self.sequence)
 
     def __repr__(self):
         return self.sequence
@@ -29,7 +29,7 @@ class DNA(object):
         complement(str) --> str
         """
         d = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-        return (''.join(d[c] if c in d else c for c in reversed(self.sequence))) 
+        return ''.join(d[c] if c in d else c for c in reversed(self.sequence))
     
     def is_dna(self):
         """
