@@ -20,7 +20,7 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
                            fileName, onscreen,
                            no_csv, pub, cores):
     """
-
+    Align two sets of sequence files to multiple reference sequences for scatter plotting of counts
     :param seq_1:
     :param seq_2:
     :param seq_name_1:
@@ -33,7 +33,6 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
     :param no_csv:
     :param pub:
     :param cores:
-    :return:
     """
     start = time.time()
     workers = cores
