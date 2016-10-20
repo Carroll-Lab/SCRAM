@@ -16,23 +16,22 @@ import psutil
 import time
 
 
-def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, fileFig,
-                           fileName, onscreen,
-                           no_csv, pub, cores):
+def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, file_fig,
+                           file_name, onscreen, no_csv, pub, cores):
     """
     Align two sets of sequence files to multiple reference sequences for scatter plotting of counts
-    :param seq_1:
-    :param seq_2:
-    :param seq_name_1:
-    :param seq_name_2:
-    :param ref_file:
-    :param nt:
-    :param fileFig:
-    :param fileName:
-    :param onscreen:
-    :param no_csv:
-    :param pub:
-    :param cores:
+    :param seq_1: seq file set 1 (SRNASeq)
+    :param seq_2: seq file set 2 (SRNASeq)
+    :param seq_name_1: seq set 1 name (str)
+    :param seq_name_2: seq set 2 name (str)
+    :param ref_file: pat/to/ref (str)
+    :param nt: read length to align (int)
+    :param file_fig: generate PDF (bool)
+    :param file_name: PDF name (str)
+    :param onscreen: show plot on screen (bool)
+    :param no_csv: generate csv (boot)
+    :param pub: publication images without labels, legend etc (bool)
+    :param cores: number of processes to spawn (int)
     """
     start = time.time()
     workers = cores
@@ -57,21 +56,20 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
         print("\nNo reads aligned to any reference sequence. \
         Output files not generated\n")
     else:
-        _cdp_output(counts_by_ref.copy(), fileFig, fileName, onscreen, no_csv, seq_name_1,
+        _cdp_output(counts_by_ref.copy(), file_fig, file_name, onscreen, no_csv, seq_name_1,
                     seq_name_2, ref_file, nt, pub)
 
 
 def _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, workers):
     """
     Fill the multiprocess queue for non-split CDP
-    :param counts_by_ref:
-    :param nt:
-    :param processes:
-    :param seq_1:
-    :param seq_2:
-    :param work_queue:
-    :param workers:
-    :return:
+    :param counts_by_ref: Manager dict for counts for each reference result (mgr.dict)
+    :param nt: read length to align (int)
+    :param processes: list for processes to be added to (list)
+    :param seq_1: seq file set 1 (SRNASeq)
+    :param seq_2: seq file set 2 (SRNASeq)
+    :param work_queue: joinable queue with ref header and seq tuples (JoinableQueue(header,ref_seq))
+    :param workers: number of processes to spawn (int)
     """
     for w in range(workers):
         p = Process(target=_cdp_no_split_worker, args=(work_queue, counts_by_ref,
@@ -87,8 +85,15 @@ def _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, 
 def _cdp_no_split_worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
     """
     Worker process - get ref from work queue, aligns reads from seq_1 and seq_2,
-    and adds as (x,y) coords to counts_by_ref if there are alignments.  
+    and adds as (x,y) coords to counts_by_ref if there are alignments.
+    :param work_queue: joinable queue with ref header and seq tuples (JoinableQueue(header,ref_seq))
+    :param counts_by_ref: Manager dict for counts for each reference result (mgr.dict)
+    :param seq_1: seq file set 1 (SRNASeq)
+    :param seq_2: seq file set 2 (SRNASeq)
+    :param nt: read length to align (int)
+    :return: True
     """
+
     try:
         while not work_queue.empty():
             both_aligned = _cdp_no_split_single_ref_align(work_queue.get(), seq_1, seq_2, nt)
@@ -101,9 +106,13 @@ def _cdp_no_split_worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
 
 def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
     """
-    Count for both seqs aligned to single ref
+    Count for both seqs aligned to single ref seq
+    :param single_ref: single ref seq (DNA)
+    :param seq_1: seq file set 1 (SRNASeq)
+    :param seq_2: seq file set 2 (SRNASeq)
+    :param nt: read length to align (int)
+    :return header, count_1, count 2 (str, float, float)
     """
-
     single_alignment = _cdp_no_split_count_aligned_reads_to_seq(seq_1, seq_2,
                                                                 single_ref[1], nt)
 
@@ -119,8 +128,8 @@ def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, sRNA_l
     pos is 5' end of read relative to 5' end of fwd strand
 
     returns an integer
+        :return: (aligned_count_1,aligned_count_2) (tuple(float,float))
     """
-    # start = time.clock()
 
     aligned_count_1 = 0  # number of reads aligned
     aligned_count_2 = 0  # number of reads aligned
@@ -169,7 +178,7 @@ def _cdp_no_split_aligned_count(aligned_count_1, query_seq_fwd, query_seq_rvs, s
 
 
 def cdp_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
-                        nt, fileFig, fileName, onscreen, no_csv, pub, cores):
+                        nt, file_fig, file_name, onscreen, no_csv, pub, cores):
     """
     Special function to split read count according to number of times aligned
     """
@@ -216,7 +225,7 @@ def cdp_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
         print("\nNo reads aligned to any reference sequence. \
         Output files not generated\n")
     else:
-        _cdp_output(counts_by_ref, fileFig, fileName, onscreen, no_csv, seq_name_1,
+        _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1,
                     seq_name_2, ref_file, nt, pub)
 
 
@@ -361,13 +370,13 @@ def _cdp_split_header_x_y_counts(header_split_count_1, header_split_count_2, ref
     return counts_by_ref
 
 
-def _cdp_output(counts_by_ref, fileFig, file_name, onscreen, no_csv, seq_name_1,
+def _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1,
                 seq_name_2, ref_file, nt, pub):
     """
     Organise csv or pdf output for CDP analysis
     """
     ref_name = ah.single_file_output(ref_file)
-    if fileFig or onscreen:
+    if file_fig or onscreen:
 
         if file_name == "auto":
             file_name = ah.cdp_file_output(seq_name_1,
@@ -380,7 +389,7 @@ def _cdp_output(counts_by_ref, fileFig, file_name, onscreen, no_csv, seq_name_1,
                     seq_name_2,
                     nt,
                     onscreen,
-                    fileFig,
+                    file_fig,
                     file_name,
                     pub)
 
