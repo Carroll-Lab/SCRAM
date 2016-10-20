@@ -9,7 +9,7 @@ Developed by Stephen Fletcher @ the laboratory of Prof. Bernie Carroll, Universi
 ___
 *Installation:*
 
-Scram is written in Python 2.7.  Install scram and its dependencies with `pip`:
+Scram is written in Python 3.5.  Install scram and its dependencies with `pip`:
 
 `pip install scram`
 
