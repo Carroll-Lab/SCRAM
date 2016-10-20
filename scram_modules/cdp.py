@@ -122,6 +122,14 @@ def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
 
 def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, sRNA_length):
     """
+
+    :param seq_dict_1:
+    :param seq_dict_2:
+    :param ref:
+    :param sRNA_length:
+    :return:
+    """
+    """
     For non-split alignments!
 
     Return mapped reads for a single ref_seq
