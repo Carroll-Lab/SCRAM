@@ -120,13 +120,13 @@ def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
         return single_ref[0], single_alignment[0], single_alignment[1],
 
 
-def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, sRNA_length):
+def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, nt):
     """
 
     :param seq_dict_1:
     :param seq_dict_2:
     :param ref:
-    :param sRNA_length:
+    :param nt:
     :return:
     """
     """
@@ -145,8 +145,8 @@ def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, sRNA_l
 
     ref_complement = ref.complement()
 
-    while count_start < (len(ref) - (sRNA_length - 1)):
-        query_seq_fwd, query_seq_rvs = _get_query_seqs(count_start, ref, ref_complement, sRNA_length)
+    while count_start < (len(ref) - (nt - 1)):
+        query_seq_fwd, query_seq_rvs = _get_query_seqs(count_start, ref, ref_complement, nt)
 
         aligned_count_1 = _cdp_no_split_aligned_count(aligned_count_1, query_seq_fwd, query_seq_rvs, seq_dict_1)
         aligned_count_2 = _cdp_no_split_aligned_count(aligned_count_2, query_seq_fwd, query_seq_rvs, seq_dict_2)
@@ -473,13 +473,35 @@ def _cdp_no_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
         while not work_queue.empty():
             ref = work_queue.get()
             for single_seq in loaded_seq_list:
-                aligned_count = _cdp_no_split_count_aligned_reads_to_seq(single_seq, ref[1], nt)
-                _cdp_worker_helper(aligned_dict, counts_by_ref, ref)
+                aligned_count = _cdp_no_split_count_aligned_reads_to_seq_single(single_seq, ref[1], nt)
+                _cdp_worker_helper(aligned_count, counts_by_ref, ref)
 
     except Exception as e:
         print(e)
     return True
 
+def _cdp_no_split_count_aligned_reads_to_seq_single(single_seq, ref, nt):
+    """
+
+    :param single_seq:
+    :param single_ref:
+    :param nt:
+    :return:
+    """
+
+    aligned_count = 0  # number of reads aligned
+    count_start = 0
+
+    ref_complement = ref.complement()
+
+    while count_start < (len(ref) - (nt - 1)):
+        query_seq_fwd, query_seq_rvs = _get_query_seqs(count_start, ref, ref_complement, nt)
+
+        aligned_count = _cdp_no_split_aligned_count(aligned_count, query_seq_fwd, query_seq_rvs, single_seq)
+
+        count_start += 1
+
+    return aligned_count
 
 def cdp_split_single(loaded_seq_list, loaded_seq_name_list,
                      ref_file,

@@ -32,7 +32,7 @@ __updated__ = '2016-10-18'
 
 def main(argv=None):
     """Command line options."""
-    ana_accepted = {'den', 'mnt3dm', 'CDP', '_cdp_no_split_aligned_count'}
+    ana_accepted = {'den', 'mnt3dm', 'CDP', 'CDP_single'}
     if argv is None:
         # noinspection PyUnusedLocal
         argv = sys.argv
@@ -65,7 +65,7 @@ USAGE
                                 formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('analysis_type', type=str, help="den \
         (single read length), mnt3dm (21, 22 and 24nt read lengths), \
-        CDP (single read length), _cdp_no_split_aligned_count")
+        CDP (single read length), CDP_single (alignment counts for each seq and reference)")
         parser.add_argument('reference_file',
                             type=str, help="Reference file (.fasta format)")
         parser.add_argument('-s1', '--seq_file_1',
@@ -219,7 +219,7 @@ USAGE
                                  pub,
                                  processes)
 
-        elif ana == '_cdp_no_split_aligned_count':
+        elif ana == 'CDP_single':
             if seq1 is None or ref is None:
                 print(
                     "Exiting due to missing arguments: CDP requires reference, sequence 1 (-s1), \
