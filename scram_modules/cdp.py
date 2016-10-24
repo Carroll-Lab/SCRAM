@@ -597,13 +597,31 @@ def _cdp_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
         while not work_queue.empty():
             ref = work_queue.get()
             for single_seq in loaded_seq_list:
-                aligned_dict = _cdp_split_dict_align_reads(single_seq, ref[1], nt)
+                aligned_dict = _cdp_split_dict_align_reads_single(single_seq, ref[1], nt)
                 _cdp_worker_helper(aligned_dict, counts_by_ref, ref)
 
     except Exception as e:
         print(e)
     return True
 
+def _cdp_split_dict_align_reads_single(seq_dict, ref, nt):
+    """
+
+    :param seq_dict:
+    :param ref:
+    :param nt:
+    :return:
+    """
+    count_start = 0
+    ref_complement = ref.complement()
+    split_alignment_dict= {}  # aligned sRNAs
+
+
+    while count_start < (len(ref) - (nt - 1)):
+        query_seq_fwd, query_seq_rvs = _get_query_seqs(count_start, ref, ref_complement, nt)
+        _cdp_split_single_align_reads(query_seq_fwd, query_seq_rvs, split_alignment_dict, seq_dict)
+        count_start += 1
+    return split_alignment_dict
 
 def _cdp_worker_helper(aligned_dict, counts_by_ref, ref):
     if ref[0] not in counts_by_ref:
