@@ -96,7 +96,7 @@ def single_cdp_file_output(counts_by_ref, loaded_seq_name_list, out_file):
     csv output for sinlge CDP alignments
     
 
-    Each row is a ref seq header
+    Each row is a refseq seq header
     
     header, seq1, seq2 etc)
     """

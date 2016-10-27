@@ -24,7 +24,7 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
     :param seq_2: seq file set 2 (SRNASeq)
     :param seq_name_1: seq set 1 name (str)
     :param seq_name_2: seq set 2 name (str)
-    :param ref_file: pat/to/ref (str)
+    :param ref_file: pat/to/refseq (str)
     :param nt: read length to align (int)
     :param file_fig: generate PDF (bool)
     :param file_name: PDF name (str)
@@ -68,7 +68,7 @@ def _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, 
     :param processes: list for processes to be added to (list)
     :param seq_1: seq file set 1 (SRNASeq)
     :param seq_2: seq file set 2 (SRNASeq)
-    :param work_queue: joinable queue with ref header and seq tuples (JoinableQueue(header,ref_seq))
+    :param work_queue: joinable queue with refseq header and seq tuples (JoinableQueue(header,ref_seq))
     :param workers: number of processes to spawn (int)
     """
     for w in range(workers):
@@ -84,9 +84,9 @@ def _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, 
 
 def _cdp_no_split_worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
     """
-    Worker process - get ref from work queue, aligns reads from seq_1 and seq_2,
+    Worker process - get refseq from work queue, aligns reads from seq_1 and seq_2,
     and adds as (x,y) coords to counts_by_ref if there are alignments.
-    :param work_queue: joinable queue with ref header and seq tuples (JoinableQueue(header,ref_seq))
+    :param work_queue: joinable queue with refseq header and seq tuples (JoinableQueue(header,ref_seq))
     :param counts_by_ref: Manager dict for counts for each reference result (mgr.dict)
     :param seq_1: seq file set 1 (SRNASeq)
     :param seq_2: seq file set 2 (SRNASeq)
@@ -106,8 +106,8 @@ def _cdp_no_split_worker(work_queue, counts_by_ref, seq_1, seq_2, nt):
 
 def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
     """
-    Count for both seqs aligned to single ref seq
-    :param single_ref: single ref seq (DNA)
+    Count for both seqs aligned to single refseq seq
+    :param single_ref: single refseq seq (DNA)
     :param seq_1: seq file set 1 (SRNASeq)
     :param seq_2: seq file set 2 (SRNASeq)
     :param nt: read length to align (int)
@@ -418,7 +418,7 @@ def cdp_no_split_single(loaded_seq_list, loaded_seq_name_list,
                         ref_file,
                         nt, cores):
     """
-    Aligns a single SRNA_seq object to multiple ref seqs in a Ref object
+    Aligns a single SRNA_seq object to multiple refseq seqs in a Ref object
     at a time.  No splitting of read counts.
     """
 
@@ -466,8 +466,8 @@ def _cdp_no_split_single_queue(counts_by_ref, loaded_seq_list, nt, processes, wo
 
 def _cdp_no_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
     """
-    Worker process - get ref from work queue, aligns reads from all seqs in seq
-    list and adds as list of counts to the ref header in the dict  
+    Worker process - get refseq from work queue, aligns reads from all seqs in seq
+    list and adds as list of counts to the refseq header in the dict
     """
     try:
         while not work_queue.empty():
@@ -507,7 +507,7 @@ def cdp_split_single(loaded_seq_list, loaded_seq_name_list,
                      ref_file,
                      nt, cores):
     """
-    Aligns a single SRNA_seq object to multiple ref seqs in a Ref object
+    Aligns a single SRNA_seq object to multiple refseq seqs in a Ref object
     at a time.  Splitting of read counts.
     """
 
@@ -590,8 +590,8 @@ def _cdp_split_single_queue(counts_by_ref, loaded_seq_list, nt, processes, work_
 
 def _cdp_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
     """
-    Worker process - get ref from work queue, aligns reads from all seqs in seq
-    list and adds as list of counts to the ref header in the dict  
+    Worker process - get refseq from work queue, aligns reads from all seqs in seq
+    list and adds as list of counts to the refseq header in the dict
     """
     try:
         while not work_queue.empty():
@@ -649,7 +649,7 @@ def _cdp_split_single_times_read_aligns(split_alignment_dict, pos):
 
 def _cdp_single_output(counts_by_ref, loaded_seq_name_list, ref_file, nt):
     """
-    Takes counts by ref dict as an imput {header:[count1,count2,...]}
+    Takes counts by refseq dict as an imput {header:[count1,count2,...]}
     """
     out_file = "{0}_multiple_file_alignment_{1}.csv".format(ref_file.split("/")[-1], nt)
 

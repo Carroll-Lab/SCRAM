@@ -11,7 +11,7 @@ def fill_in_zeros(fwd_rvs_align_list, ref_len, nt):
     :param fwd_rvs_align_list:  list of sorted forwards and reverse alignments
     :param ref_len: number of nucleotides in the reference sequence (int)
     :param nt: length of the aligned reads (int)
-    :return: reference_x_axis ([0,0,...] (list(int)) - length of ref seq,
+    :return: reference_x_axis ([0,0,...] (list(int)) - length of refseq seq,
              fwd_alignment_y_axis [2,4,5.2,6,....] (list(float)) - sense strand alignment count (positive),
              fwd_rvs_align_list [-3,-4,-5.6,...] (list(float)) - antisense strand alignment count (negative)
     """

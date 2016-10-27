@@ -5,7 +5,7 @@ Stores unique sequence and read count in an internal dictionary.
 Automatic normalisation to RPMR once loaded from file
 '''
 
-from dna import DNA
+from scram_modules.dna import DNA
 import time
 
 

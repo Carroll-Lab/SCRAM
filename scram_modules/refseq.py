@@ -1,5 +1,5 @@
 import time
-from dna import DNA
+from scram_modules.dna import DNA
 from termcolor import colored
 
 
@@ -23,7 +23,7 @@ class RefSeq(object):
         return iter(self._internal_dict.items())  # iterable
 
     def __len__(self):
-        return len(self._internal_dict)  # number of ref seqs in object
+        return len(self._internal_dict)  # number of refseq seqs in object
 
     def headers(self):
         return self._internal_dict.keys()  # view of headers
@@ -35,7 +35,7 @@ class RefSeq(object):
         """
         Load reference file in FASTA format
 
-        :param ref_file: /path/to/ref/file
+        :param ref_file: /path/to/refseq/file
         """
         print(colored("\n-----------------LOADING REFERENCE----------------", 'green'))
         start = time.clock()
@@ -66,7 +66,7 @@ class RefSeq(object):
                 full_len_seq += line.strip().upper()
 
         self._internal_dict.update({key: DNA(full_len_seq)})
-
+        loaded_ref.close()
         print('\n----{0} reference sequences loaded for alignment----'.format(ref_count))
         if len(self._internal_dict) == 1:
             print("\n{0} length = {1} bp".format(ref_file.split('/')[-1], len(full_len_seq)))

@@ -1,6 +1,6 @@
 import operator
 
-from dna import DNA
+from scram_modules.dna import DNA
 
 
 class AlignedReads(object):
@@ -28,6 +28,12 @@ class AlignedReads(object):
 
     def __len__(self):
         return len(self._internal_dict) #number of reads aligned (int)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._internal_dict == other._internal_dict
+        else:
+            return False
 
     def sRNAs(self):
         return self._internal_dict.keys() #view of reads aligned

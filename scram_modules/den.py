@@ -20,7 +20,7 @@ def srna_profile(seq, seq_output, ref_file, nt, smooth_win_size, file_fig,
     Align reads of one length to a single reference sequence
     :param seq: path/to/read file (str)
     :param seq_output: treatment name (str)
-    :param ref_file: list of ref file paths (list(str))
+    :param ref_file: list of refseq file paths (list(str))
     :param nt: read length to align (int)
     :param smooth_win_size: window size for smoothed profile (int)
     :param file_fig: output pdf (bool)
@@ -63,7 +63,7 @@ def srna_profile_21_22_24(seq, seq_output, ref_file, smooth_win_size,
     Align reads of 21,22 and 24 nt to a single reference seq.
     :param seq: path/to/read file (str)
     :param seq_output: treatment name (str)
-    :param ref_file: list of ref file paths (list(str))
+    :param ref_file: list of refseq file paths (list(str))
     :param smooth_win_size: window size for smoothed profile (int)
     :param file_fig: output pdf (bool)
     :param file_name: manual file name (str)
