@@ -26,8 +26,8 @@ from argparse import RawDescriptionHelpFormatter
 
 __all__ = []
 __version__ = 0.65
-__date__ = '2016-10-27'
-__updated__ = '2016-10-27'
+__date__ = '2016-01-18'
+__updated__ = '2016-01-18'
 
 
 def main(argv=None):

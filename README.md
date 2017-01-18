@@ -65,6 +65,7 @@ Flags
 * **-no_csv** : Do not generate .csv alignment file
 * **-split** : Split CDP read alignment counts based on no. of alignments
 * **-pub** : Remove all labels from density maps for publication
+* **-bokeh** : For Jupyter notebook inline plotting when scram started using magic run. No figure output to file.
 * **-V** : Show program's version number and exit
 
 ___
