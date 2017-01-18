@@ -15,7 +15,7 @@ Module for generating sRNA alignment profiles
 
 
 def srna_profile(seq, seq_output, ref_file, nt, smooth_win_size, file_fig,
-                 file_name, onscreen, no_csv, ylim, pub, split):
+                 file_name, onscreen, no_csv, ylim, pub, split, bok):
     """
     Align reads of one length to a single reference sequence
     :param seq: path/to/read file (str)
@@ -54,11 +54,11 @@ def srna_profile(seq, seq_output, ref_file, nt, smooth_win_size, file_fig,
             file_name = ah.ref_seq_nt_output(seq_output, ref_output, nt, "pdf")
 
         pr.den_plot(x_ref, y_fwd_smoothed, y_rvs_smoothed, nt, file_fig,
-                    file_name, onscreen, ref_output, ylim, pub)
+                    file_name, onscreen, ref_output, ylim, pub, bok)
 
 
 def srna_profile_21_22_24(seq, seq_output, ref_file, smooth_win_size,
-                          file_fig, file_name, onscreen, no_csv, y_lim, pub, split):
+                          file_fig, file_name, onscreen, no_csv, y_lim, pub, split, bok):
     """
     Align reads of 21,22 and 24 nt to a single reference seq.
     :param seq: path/to/read file (str)
@@ -114,7 +114,7 @@ def srna_profile_21_22_24(seq, seq_output, ref_file, smooth_win_size,
 
         pr.den_multi_plot_21_22_24(x_ref, y_fwd_smoothed_21, y_rvs_smoothed_21, y_fwd_smoothed_22, y_rvs_smoothed_22,
                                    y_fwd_smoothed_24, y_rvs_smoothed_24, file_fig, file_name, onscreen, ref_output,
-                                   y_lim, pub)
+                                   y_lim, pub, bok)
     if no_csv:
         wtf.mnt_csv_output(non_srt_alignments_dict[21],
                            non_srt_alignments_dict[22],

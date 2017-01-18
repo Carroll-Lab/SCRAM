@@ -12,7 +12,7 @@ from srnaseq import SRNASeq
 def single_ref_profile(seq_file_list, ref_file, nt, smoothWinSize=50,
                        fileFig=False, fileName='plot.pdf', min_read_size=18,
                        max_read_size=32, min_read_no=1, onscreen=False, no_csv=False,
-                       ylim=0, pub=False, split=False):
+                       ylim=0, pub=False, split=False, bok = False):
     """
     Align reads of a single length to a single reference
     :param seq_file_list: [path/to/seq/, path/to/seq2,...] (list(str))
@@ -29,20 +29,22 @@ def single_ref_profile(seq_file_list, ref_file, nt, smoothWinSize=50,
     :param ylim: +/- y limits on plot
     :param pub: publication plot with no axes, legend (bool)
     :param split: split aligned read counts by number of times a read aligns
+    :param bok: use bokeh for plotting (bool)
     """
     """
     Aligns reads from a single read file to a single reference sequence for
     a single sRNA size.
     """
-    seq, seq_name = _profile_load_files_shared(max_read_size, min_read_no, min_read_size, seq_file_list)
+    seq, seq_name = _profile_load_files_shared(max_read_size, min_read_no,
+                                               min_read_size, seq_file_list)
     dn.srna_profile(seq, seq_name, ref_file, nt, smoothWinSize, fileFig,
-                    fileName, onscreen, no_csv, ylim, pub, split)
+                    fileName, onscreen, no_csv, ylim, pub, split, bok)
 
 
 def single_ref_profile_21_22_24(seq_file_list, ref_file, smoothWinSize=50,
                                 fileFig=True, fileName='plot.pdf', min_read_size=18,
                                 max_read_size=32, min_read_no=1, onscreen=True, no_csv=False,
-                                y_lim=0, pub=False, split=False):
+                                y_lim=0, pub=False, split=False,  bok = False):
     """
     Align reads of 21, 22 annd 24 nt to a single reference
     :param seq_file_list: [path/to/seq/, path/to/seq2,...] (list(str))
@@ -59,10 +61,11 @@ def single_ref_profile_21_22_24(seq_file_list, ref_file, smoothWinSize=50,
     :param ylim: +/- y limits on plot
     :param pub: publication plot with no axes, legend (bool)
     :param split: split aligned read counts by number of times a read aligns
+    :param bok: use bokeh for plotting (bool)
     """
     seq, seq_name = _profile_load_files_shared(max_read_size, min_read_no, min_read_size, seq_file_list)
     dn.srna_profile_21_22_24(seq, seq_name, ref_file, smoothWinSize,
-                             fileFig, fileName, onscreen, no_csv, y_lim, pub, split)
+                             fileFig, fileName, onscreen, no_csv, y_lim, pub, split, bok)
 
 
 def _profile_load_files_shared(max_read_size, min_read_no, min_read_size, seq_file_list):
@@ -94,7 +97,7 @@ def _profile_load_files_shared(max_read_size, min_read_no, min_read_size, seq_fi
 def CDP(seq_file_list_1, seq_file_list_2, ref_file, nt,
         fileFig=False, fileName='plot.pdf',
         min_read_size=18, max_read_size=32, min_read_no=1, onscreen=False,
-        no_csv=False, pub=True, processes=4):
+        no_csv=False, pub=True, processes=4,  bok = False):
     """
     Align reads of a single length to multiple references, and calculate counts only
     :param seq_file_list_1: [path/to/seq/, path/to/seq2,...] (list(str))
@@ -110,6 +113,7 @@ def CDP(seq_file_list_1, seq_file_list_2, ref_file, nt,
     :param no_csv:  generate a CSV of alignment data (bool)
     :param pub: publication plot with no axes, legend (bool)
     :param processes: no of processes to generate at a time i.e. threads (int)
+    :param bok: use bokeh for plotting (bool)
     """
 
     seq_1, seq_2, seq_name_1, seq_name_2 = _cdp_load_files_shared(max_read_size, min_read_no, min_read_size,
@@ -117,14 +121,13 @@ def CDP(seq_file_list_1, seq_file_list_2, ref_file, nt,
                                                                   seq_file_list_2)
 
     cdp.cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, fileFig,
-                               fileName, onscreen,
-                               no_csv, pub, processes)
+                               fileName, onscreen, no_csv, pub, processes, bok)
 
 
 def CDP_split(seq_file_list_1, seq_file_list_2, ref_file, nt,
               fileFig=False, fileName='plot.pdf',
               min_read_size=18, max_read_size=32, min_read_no=1, onscreen=False,
-              no_csv=False, pub=False, processes=4):
+              no_csv=False, pub=False, processes=4,  bok = False):
     """
     Align reads of a single length to multiple references, and calculate counts only
     :param seq_file_list_1: [path/to/seq/, path/to/seq2,...] (list(str))
@@ -140,13 +143,14 @@ def CDP_split(seq_file_list_1, seq_file_list_2, ref_file, nt,
     :param no_csv:  generate a CSV of alignment data (bool)
     :param pub: publication plot with no axes, legend (bool)
     :param processes: no of processes to generate at a time i.e. threads (int)
+    :param bok: use bokeh for plotting (bool)
     """
     seq_1, seq_2, seq_name_1, seq_name_2 = _cdp_load_files_shared(max_read_size, min_read_no, min_read_size,
                                                                   seq_file_list_1,
                                                                   seq_file_list_2)
 
     cdp.cdp_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
-                            nt, fileFig, fileName, onscreen, no_csv, pub, processes)
+                            nt, fileFig, fileName, onscreen, no_csv, pub, processes, bok)
 
 
 def _cdp_load_files_shared(max_read_size, min_read_no, min_read_size, seq_file_list_1, seq_file_list_2):

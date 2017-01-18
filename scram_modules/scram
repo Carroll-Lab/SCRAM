@@ -115,6 +115,8 @@ USAGE
                             default=False,
                             help='Remove all labels from density maps for \
                             publication')
+        parser.add_argument('-bokeh', '--bokeh', action='store_true', default=False,
+                            help='For Jupyter notebook inline plotting when scram started using magic run. No figure output')
         parser.add_argument('-V', '--version',
                             action='version', version=program_version_message)
         # Process arguments
@@ -135,6 +137,7 @@ USAGE
         no_display = args.no_display
         split = args.split_reads
         pub = args.publish
+        bok = args.bokeh
         processes = args.processes
         # plot figure or not
         if ana not in ana_accepted:
@@ -164,7 +167,8 @@ USAGE
                                             no_csv,
                                             ylim,
                                             pub,
-                                            split)
+                                            split,
+                                            bok)
 
         elif ana == 'mnt3dm':
             if seq1 is None or ref is None:
@@ -182,7 +186,8 @@ USAGE
                                                      no_csv,
                                                      ylim,
                                                      pub,
-                                                     split)
+                                                     split,
+                                                     bok)
 
         elif ana == 'CDP':
             if seq1 is None or seq2 is None or ref is None:
@@ -203,7 +208,8 @@ USAGE
                                        no_display,
                                        no_csv,
                                        pub,
-                                       processes)
+                                       processes,
+                                       bok)
                 else:
                     analysis.CDP(seq1,
                                  seq2,
@@ -217,7 +223,8 @@ USAGE
                                  no_display,
                                  no_csv,
                                  pub,
-                                 processes)
+                                 processes,
+                                 bok)
 
         elif ana == 'CDP_single':
             if seq1 is None or ref is None:

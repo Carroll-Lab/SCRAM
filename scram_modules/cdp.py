@@ -1,10 +1,3 @@
-'''CDP analysis class - for calculation of reads aligning to a reference
-sequence as (x,y) coordinates for two sets of sequence files
-
-Created on 25 Feb 2016
-
-@author: steve
-'''
 from termcolor import colored
 from refseq import RefSeq
 import write_to_file as wtf
@@ -15,9 +8,11 @@ from multiprocessing import Process, JoinableQueue, Manager
 import psutil
 import time
 
-
+"""
+CDP analysis class - for calculation of reads aligning to a reference
+"""
 def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, file_fig,
-                           file_name, onscreen, no_csv, pub, cores):
+                           file_name, onscreen, no_csv, pub, cores, bok):
     """
     Align two sets of sequence files to multiple reference sequences for scatter plotting of counts
     :param seq_1: seq file set 1 (SRNASeq)
@@ -47,8 +42,8 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
         work_queue.put((header, seq,))  # tuple into work queue
         count += 1
         if count % 10000 == 0:
-            print ("{0} reference sequences processed\n".format(count))
-            print (colored("{0}% system RAM used\n".format(psutil.virtual_memory().percent),'green'))
+            print("{0} reference sequences processed\n".format(count))
+            print(colored("{0}% system RAM used\n".format(psutil.virtual_memory().percent), 'green'))
             _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, workers)
     _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, workers)
     print("\nAlignment time = " + str("{0:.1f}".format((time.time() - start))) + " seconds\n")
@@ -57,7 +52,7 @@ def cdp_no_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file, nt, f
         Output files not generated\n")
     else:
         _cdp_output(counts_by_ref.copy(), file_fig, file_name, onscreen, no_csv, seq_name_1,
-                    seq_name_2, ref_file, nt, pub)
+                    seq_name_2, ref_file, nt, pub, bok)
 
 
 def _cdp_no_split_queue(counts_by_ref, nt, processes, seq_1, seq_2, work_queue, workers):
@@ -113,6 +108,7 @@ def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
     :param nt: read length to align (int)
     :return header, count_1, count 2 (str, float, float)
     """
+
     single_alignment = _cdp_no_split_count_aligned_reads_to_seq(seq_1, seq_2,
                                                                 single_ref[1], nt)
 
@@ -122,21 +118,13 @@ def _cdp_no_split_single_ref_align(single_ref, seq_1, seq_2, nt):
 
 def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, nt):
     """
-
+    Return mapped reads for a single ref_seq
+    pos is 5' end of read relative to 5' end of fwd strand
     :param seq_dict_1:
     :param seq_dict_2:
     :param ref:
     :param nt:
-    :return:
-    """
-    """
-    For non-split alignments!
-
-    Return mapped reads for a single ref_seq
-    pos is 5' end of read relative to 5' end of fwd strand
-
-    returns an integer
-        :return: (aligned_count_1,aligned_count_2) (tuple(float,float))
+    :return: aligned_count_1, aligned_count_2 (int,int)
     """
 
     aligned_count_1 = 0  # number of reads aligned
@@ -152,26 +140,26 @@ def _cdp_no_split_count_aligned_reads_to_seq(seq_dict_1, seq_dict_2, ref, nt):
         aligned_count_2 = _cdp_no_split_aligned_count(aligned_count_2, query_seq_fwd, query_seq_rvs, seq_dict_2)
         count_start += 1
 
-    return (aligned_count_1,aligned_count_2)
+    return aligned_count_1, aligned_count_2
 
 
-def _get_query_seqs(count_start, ref, ref_complement, sRNA_length):
+def _get_query_seqs(count_start, ref, ref_complement, srna_length):
     """
-
+    Get to correct length fwd and rvs query seq from the ref
     :param count_start:
     :param ref:
     :param ref_complement:
-    :param sRNA_length:
+    :param srna_length:
     :return:
     """
-    query_seq_fwd = DNA(ref[count_start:(count_start + sRNA_length)])
-    query_seq_rvs = DNA(ref_complement[count_start:(count_start + sRNA_length)])
+    query_seq_fwd = DNA(ref[count_start:(count_start + srna_length)])
+    query_seq_rvs = DNA(ref_complement[count_start:(count_start + srna_length)])
     return query_seq_fwd, query_seq_rvs
 
 
 def _cdp_no_split_aligned_count(aligned_count_1, query_seq_fwd, query_seq_rvs, seq_dict_1):
     """
-
+    
     :param aligned_count_1:
     :param query_seq_fwd:
     :param query_seq_rvs:
@@ -186,7 +174,7 @@ def _cdp_no_split_aligned_count(aligned_count_1, query_seq_fwd, query_seq_rvs, s
 
 
 def cdp_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
-                        nt, file_fig, file_name, onscreen, no_csv, pub, cores):
+                        nt, file_fig, file_name, onscreen, no_csv, pub, cores, bok):
     """
     Special function to split read count according to number of times aligned
     """
@@ -234,7 +222,7 @@ def cdp_split_alignment(seq_1, seq_2, seq_name_1, seq_name_2, ref_file,
         Output files not generated\n")
     else:
         _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1,
-                    seq_name_2, ref_file, nt, pub)
+                    seq_name_2, ref_file, nt, pub, bok)
 
 
 def _cdp_split_queue(alignment_dict_1, alignment_dict_2, nt, processes, seq_1, seq_2, work_queue, workers):
@@ -282,9 +270,6 @@ def _cdp_split_worker(work_queue, alignment_dict_1, alignment_dict_2, seq_1,
     return True
 
 
-
-
-
 def _cdp_split_dict_align_reads(seq_dict_1, seq_dict_2, ref, nt):
     """
     Returns a dictionary with the number of times a read aligns to single
@@ -302,7 +287,7 @@ def _cdp_split_dict_align_reads(seq_dict_1, seq_dict_2, ref, nt):
         _cdp_split_single_align_reads(query_seq_fwd, query_seq_rvs, split_alignment_dict_1, seq_dict_1)
         _cdp_split_single_align_reads(query_seq_fwd, query_seq_rvs, split_alignment_dict_2, seq_dict_2)
         count_start += 1
-    return (split_alignment_dict_1, split_alignment_dict_2)
+    return split_alignment_dict_1, split_alignment_dict_2
 
 
 def _cdp_split_single_align_reads(query_seq_fwd, query_seq_rvs, split_alignment_dict, seq_dict):
@@ -331,14 +316,14 @@ def _cdp_split_times_read_aligns(split_alignment_dict):
     {read: times aligned} 
     """
 
-    sRNA_align_counts = {}
+    srna_align_counts = {}
     for aligned_sRNAs in split_alignment_dict.values():
         for aligned_sRNA, count in aligned_sRNAs.items():
-            if aligned_sRNA in sRNA_align_counts:
-                sRNA_align_counts[aligned_sRNA] += count
+            if aligned_sRNA in srna_align_counts:
+                srna_align_counts[aligned_sRNA] += count
             else:
-                sRNA_align_counts[aligned_sRNA] = count
-    return sRNA_align_counts
+                srna_align_counts[aligned_sRNA] = count
+    return srna_align_counts
 
 
 def _cdp_split_reads_for_header(split_align_dict, split_align_count_dict, seq_dict):
@@ -379,7 +364,7 @@ def _cdp_split_header_x_y_counts(header_split_count_1, header_split_count_2, ref
 
 
 def _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1,
-                seq_name_2, ref_file, nt, pub):
+                seq_name_2, ref_file, nt, pub, bok):
     """
     Organise csv or pdf output for CDP analysis
     """
@@ -391,7 +376,7 @@ def _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1
                                            seq_name_2,
                                            ref_name,
                                            nt,
-                                          "pdf")
+                                           "pdf")
         pr.cdp_plot(counts_by_ref,
                     seq_name_1,
                     seq_name_2,
@@ -399,7 +384,8 @@ def _cdp_output(counts_by_ref, file_fig, file_name, onscreen, no_csv, seq_name_1
                     onscreen,
                     file_fig,
                     file_name,
-                    pub)
+                    pub,
+                    bok)
 
     if no_csv:
         out_csv_name = ah.cdp_file_output(seq_name_1,
@@ -480,11 +466,12 @@ def _cdp_no_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
         print(e)
     return True
 
+
 def _cdp_no_split_count_aligned_reads_to_seq_single(single_seq, ref, nt):
     """
 
     :param single_seq:
-    :param single_ref:
+    :param ref:
     :param nt:
     :return:
     """
@@ -502,6 +489,7 @@ def _cdp_no_split_count_aligned_reads_to_seq_single(single_seq, ref, nt):
         count_start += 1
 
     return aligned_count
+
 
 def cdp_split_single(loaded_seq_list, loaded_seq_name_list,
                      ref_file,
@@ -604,6 +592,7 @@ def _cdp_split_single_worker(work_queue, counts_by_ref, loaded_seq_list, nt):
         print(e)
     return True
 
+
 def _cdp_split_dict_align_reads_single(seq_dict, ref, nt):
     """
 
@@ -614,14 +603,14 @@ def _cdp_split_dict_align_reads_single(seq_dict, ref, nt):
     """
     count_start = 0
     ref_complement = ref.complement()
-    split_alignment_dict= {}  # aligned sRNAs
-
+    split_alignment_dict = {}  # aligned sRNAs
 
     while count_start < (len(ref) - (nt - 1)):
         query_seq_fwd, query_seq_rvs = _get_query_seqs(count_start, ref, ref_complement, nt)
         _cdp_split_single_align_reads(query_seq_fwd, query_seq_rvs, split_alignment_dict, seq_dict)
         count_start += 1
     return split_alignment_dict
+
 
 def _cdp_worker_helper(aligned_dict, counts_by_ref, ref):
     if ref[0] not in counts_by_ref:
@@ -637,14 +626,14 @@ def _cdp_split_single_times_read_aligns(split_alignment_dict, pos):
     {read: times aligned} 
     """
 
-    sRNA_align_counts = {}
+    srna_align_counts = {}
     for aligned_sRNAs in list(split_alignment_dict.values())[pos]:
         for aligned_sRNA, count in aligned_sRNAs.items():
-            if aligned_sRNA in sRNA_align_counts:
-                sRNA_align_counts[aligned_sRNA][pos] += count
+            if aligned_sRNA in srna_align_counts:
+                srna_align_counts[aligned_sRNA][pos] += count
             else:
-                sRNA_align_counts[aligned_sRNA][pos] = count
-    return sRNA_align_counts
+                srna_align_counts[aligned_sRNA][pos] = count
+    return srna_align_counts
 
 
 def _cdp_single_output(counts_by_ref, loaded_seq_name_list, ref_file, nt):
